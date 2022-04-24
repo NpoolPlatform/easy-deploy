@@ -1,0 +1,6 @@
+- name: Compile lotus source code
+  make:
+    chdir: '{{ filecoin_source_dir }}'
+    target: '{{ compile_target }}'
+    params:
+      NUM_THREADS: 4

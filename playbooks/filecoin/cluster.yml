@@ -2,3 +2,4 @@
   roles:
     - common
     - filecoin-official-source
+    - filecoin-compiler

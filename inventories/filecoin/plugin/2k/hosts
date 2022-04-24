@@ -1,0 +1,8 @@
+[filecoin-chain]
+172.19.16.110 ansible_ssh_user=test ansible_ssh_pass=12345679
+
+[filecoin-2k:children]
+filecoin-chain
+
+[filecoin:children]
+filecoin-2k
