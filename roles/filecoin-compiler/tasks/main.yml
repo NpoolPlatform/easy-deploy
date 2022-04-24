@@ -1,8 +1,16 @@
+- name: Clean old build
+  environment:
+    PATH: '{{ go_bin_dir }}:{{ rust_bin_dir }}:{{ ansible_env.PATH }}'
+  make:
+    chdir: '{{ filecoin_source_dir }}'
+    target: clean
+  ignore_errors: true
+
 - name: Compile lotus source code
   environment:
     PATH: '{{ go_bin_dir }}:{{ rust_bin_dir }}:{{ ansible_env.PATH }}'
     FFI_BUILD_FROM_SOURCE: 1
-  shell: 'make clean {{ compile_target }} -j4 >> {{ log_dir }}/lotus-compiling.log 2>&1'
+  shell: 'make {{ compile_target }} -j4 >> {{ log_dir }}/lotus-compiling.log 2>&1'
   run_once: true
   args:
     chdir: '{{ filecoin_source_dir }}'

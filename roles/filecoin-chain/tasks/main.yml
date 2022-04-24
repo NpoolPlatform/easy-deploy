@@ -2,6 +2,7 @@
   systemd:
     state: stopped
     name: lotus-daemon
+  ignore_errors: true
 
 - name: Copy service file
   copy:
