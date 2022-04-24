@@ -1,9 +1,6 @@
-- hosts: filecoin
+- hosts: filecoin-chain
   roles:
     - common
     - filecoin-official-source
     - filecoin-compiler
-
-- hosts: filecoin-chain
-  roles:
     - filecoin-chain

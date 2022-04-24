@@ -23,6 +23,7 @@
 
 - name: Install rust & cargo
   shell: '{{ output_dir }}/sh.rustup.rs -y >> {{ log_dir }}/rust-installer.log 2>&1'
+  run_once: true
   when: cargo_version_detect.failed
 
 - name: Remove install script

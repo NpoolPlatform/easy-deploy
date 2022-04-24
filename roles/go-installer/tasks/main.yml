@@ -20,6 +20,7 @@
   command: './all.bash >> {{ log_dir }}/go-installer.log'
   args:
     chdir: '{{ go_source_dir }}/src'
+  run_once: true
   async: 3600
   poll: 0
   register: go_builder
