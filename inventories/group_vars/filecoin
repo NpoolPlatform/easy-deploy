@@ -1,1 +1,2 @@
 version: v1.15.1
+filecoin_source_dir: '{{ source_dir }}/filecoin/official/lotus-{{ version }}'

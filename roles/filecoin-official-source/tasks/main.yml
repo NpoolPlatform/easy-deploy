@@ -1,6 +1,6 @@
 - name: Lotus official source code checkout
   ansible.builtin.git:
     repo: 'https://github.com/filecoin-project/lotus.git'
-    dest: '{{ ansible_env.HOME }}/filecoin/official/lotus'
+    dest: '{{ filecoin_source_dir }}'
     version: '{{ version }}'
     force: true

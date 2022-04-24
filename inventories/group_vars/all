@@ -1,0 +1,2 @@
+output_dir: '{{ ansible_env.PWD }}/.easy.deploy.output'
+source_dir: '{{ ansible_env.HOME }}/.easy.deploy.source'

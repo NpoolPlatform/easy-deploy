@@ -1,2 +1,11 @@
 - name: Print home directory
-  debug: var=ansible_env.HOME
+  debug: var=source_dir
+
+- name: Print output directory
+  debug: var=output_dir
+
+- name: Create output directory
+  ansible.builtin.file:
+    path: output_dir
+    state: directory
+    recurse: yes
