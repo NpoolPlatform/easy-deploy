@@ -11,7 +11,7 @@ Environment=LOTUS_PATH=/opt/chain/lotus
 Environment=FIL_PROOFS_PARAMETER_CACHE=/root/workspace/filecoin-proof-parameters
 Environment=FIL_PROOFS_MAXIMIZE_CACHING=1
 Environment=FIL_PROOFS_CACHE_DIR=/root/workspace/lotustmpdir/filecoin-parents
-ExecStart=/usr/local/bin/lotus --repo=/opt/chain/lotus daemon --username entropytest --password 12345679
+ExecStart=/usr/local/bin/lotus --repo=/opt/chain/lotus daemon
 Restart=always
 RestartSec=10
 MemoryAccounting=true
