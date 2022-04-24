@@ -1,0 +1,38 @@
+[Unit]
+Description=Lotus Daemon
+After=lotus-mount-disk.service
+
+[Service]
+Environment=GOLOG_FILE=/var/log/lotus/daemon.log
+Environment=GOLOG_LOG_FMT="json"
+Environment=GOLOG_LOG_LEVEL="INFO"
+Environment=TMPDIR=/root/workspace/lotustmpdir
+Environment=LOTUS_PATH=/opt/chain/lotus
+Environment=FIL_PROOFS_PARAMETER_CACHE=/root/workspace/filecoin-proof-parameters
+Environment=FIL_PROOFS_MAXIMIZE_CACHING=1
+Environment=FIL_PROOFS_CACHE_DIR=/root/workspace/lotustmpdir/filecoin-parents
+ExecStart=/usr/local/bin/lotus --repo=/opt/chain/lotus daemon --username entropytest --password 12345679
+Restart=always
+RestartSec=10
+MemoryAccounting=true
+MemoryHigh=128G
+MemoryMax=128G
+Nice=-20
+LimitNICE=-20
+LimitNOFILE=1048576:1048576
+LimitCORE=infinity
+LimitNPROC=819200:1048576
+# IOSchedulingPriority=0
+# IOSchedulingClass=realtime
+# CPUSchedulingPolicy=fifo
+# CPUSchedulingPriority=99
+IOWeight=9999
+CPUWeight=1000
+LimitCORE=1024
+MemoryHigh=infinity
+MemoryMax=infinity
+Delegate=yes
+User=root
+
+[Install]
+WantedBy=multi-user.target

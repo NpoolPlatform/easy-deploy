@@ -1,5 +1,7 @@
 - name: Detect golang version
-  shell: '{{ go_bin_dir }}/go version | grep {{ go_version }}'
+  environment:
+    PATH: '{{ go_bin_dir }}:{{ ansible_env.PATH }}'
+  shell: 'go version | grep {{ go_version }}'
   register: go_version_detect
   ignore_errors: true
 

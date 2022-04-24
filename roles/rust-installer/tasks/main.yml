@@ -1,4 +1,6 @@
 - name: Detect cargo version
+  environment:
+    PATH: '{{ rust_bin_dir }}:{{ ansible_env.PATH }}'
   shell: 'cargo -v version'
   register: cargo_version_detect
   ignore_errors: true
@@ -15,8 +17,8 @@
   get_url:
     url: https://sh.rustup.rs
     dest: '{{ output_dir }}/sh.rustup.rs'
-    mode: '0755'
-    force: 'yes'
+    mode: 0755
+    force: yes
   when: cargo_version_detect.failed
 
 - name: Install rust & cargo

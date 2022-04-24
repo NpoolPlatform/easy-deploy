@@ -1,0 +1,24 @@
+- name: Stop lotus daemon
+  systemd:
+    state: stopped
+    name: lotus-daemon
+
+- name: Copy service file
+  copy:
+    src: lotus-daemon.service
+    dest: /etc/systemd/system/lotus-daemon.service
+    owner: root
+    group: root
+
+- name: Copy bin file
+  copy:
+    src: '{{ filecoin_source_dir }}/lotus'
+    dest: '/usr/local/bin/lotus'
+    owner: root
+    group: root
+
+- name: Start lotus daemon
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: lotus-daemon
