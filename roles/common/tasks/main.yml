@@ -12,3 +12,9 @@
     path: '{{ output_dir }}'
     state: directory
     recurse: yes
+
+- name: Create log directory
+  ansible.builtin.file:
+    path: '{{ log_dir }}'
+    state: directory
+    recurse: yes

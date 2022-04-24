@@ -15,7 +15,7 @@
   when: go_version_detect.failed
 
 - name: Build golang source
-  command: './all.bash'
+  command: './all.bash >> {{ log_dir }}/go-installer.log'
   args:
     chdir: '{{ go_source_dir }}/src'
   async: 3600
