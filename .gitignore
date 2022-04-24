@@ -1,1 +1,2 @@
 .easy.deploy.output
+inventories/*/group_vars
