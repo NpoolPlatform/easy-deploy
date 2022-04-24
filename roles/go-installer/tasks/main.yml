@@ -15,8 +15,19 @@
   command: './all.bash'
   args:
     chdir: '{{ go_source_dir }}/src'
+  async: 3600
+  poll: 0
+  register: go_builder
   when: go_version_detect.failed
-  poll: 5
+
+- name: Check go build progress
+  async_status:
+    jid: '{{ go_builder.ansible_job_id }}'
+  register: go_builder_progress
+  until: go_builder_progress.finished
+  retries: 10000
+  delay: 5
+  when: go_version_detect.failed
 
 - name: Create go bin directory
   file:
