@@ -1,4 +1,6 @@
 - name: Compile lotus source code
+  environment:
+    PATH: '{{ go_bin_dir }}:{{ ansible_env.PATH }}'
   make:
     chdir: '{{ filecoin_source_dir }}'
     target: '{{ compile_target }}'
