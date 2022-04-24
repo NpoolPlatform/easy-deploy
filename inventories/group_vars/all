@@ -1,2 +1,7 @@
 output_dir: '{{ ansible_env.PWD }}/.easy.deploy.output'
 source_dir: '{{ ansible_env.HOME }}/.easy.deploy.source'
+
+go_version: 1.17.6
+go_dir: '{{ ansible_env.HOME }}/go'
+go_source_dir: '{{ go_dir }}/source'
+go_bin_dir: '{{ go_dir }}/bin'

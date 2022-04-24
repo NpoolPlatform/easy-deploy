@@ -1,0 +1,6 @@
+- name: Checkout golang version
+  command: '{{ go_bin_dir }}/go version'
+  register: go_version
+
+- name: Print detected go version
+  debug: var=go_version
