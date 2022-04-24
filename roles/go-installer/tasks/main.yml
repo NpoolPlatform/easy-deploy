@@ -1,6 +1,37 @@
 - name: Checkout golang version
-  command: '{{ go_bin_dir }}/go version'
-  register: go_version
+  command: '{{ go_bin_dir }}/go version | grep {{ go_version }}'
+  register: go_version_detect
+  ignore_errors: true
 
-- name: Print detected go version
-  debug: var=go_version
+- name: Clone golang source
+  ansible.builtin.git:
+    repo: 'https://github.com/golang/go.git'
+    dest: '{{ go_source_dir }}'
+    version: 'go{{ go_version }}'
+    force: true
+  when: go_version_detect.failed
+
+- name: Build golang source
+  command: './all.bash'
+  args:
+    chdir: '{{ go_source_dir }}/src'
+  when: go_version_detect.failed
+  poll: 5
+
+- name: Create go bin directory
+  file:
+    path: '{{ go_bin_dir }}'
+    state: directory
+    recurse: yes
+
+- name: Move go bin to target
+  copy:
+    src: '{{ go_source_dir }}/bin/go'
+    dest: '{{ go_bin_dir }}/go'
+  when: go_version_detect.failed
+
+- name: Move gofmt bin to target
+  copy:
+    src: '{{ go_source_dir }}/bin/gofmt'
+    dest: '{{ go_bin_dir }}/gofmt'
+  when: go_version_detect.failed
