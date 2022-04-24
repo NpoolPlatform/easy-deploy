@@ -6,3 +6,5 @@ go_version: 1.17.6
 go_dir: '{{ ansible_env.HOME }}/go'
 go_source_dir: '{{ go_dir }}/source'
 go_bin_dir: '{{ go_dir }}/bin'
+
+rust_bin_dir: '{{ ansible_env.HOME }}/.cargo/bin'
