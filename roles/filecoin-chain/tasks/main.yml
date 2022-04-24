@@ -5,6 +5,9 @@
   ignore_errors: true
 
 - name: Copy service file
+  become: yes
+  become_user: root
+  become_method: sudo
   copy:
     src: lotus-daemon.service
     dest: /etc/systemd/system/lotus-daemon.service
@@ -12,6 +15,9 @@
     group: root
 
 - name: Copy bin file
+  become: yes
+  become_user: root
+  become_method: sudo
   copy:
     src: '{{ filecoin_source_dir }}/lotus'
     dest: '/usr/local/bin/lotus'
@@ -19,6 +25,9 @@
     group: root
 
 - name: Start lotus daemon
+  become: yes
+  become_user: root
+  become_method: sudo
   systemd:
     state: started
     daemon_reload: yes
