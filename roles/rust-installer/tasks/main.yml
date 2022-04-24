@@ -1,0 +1,30 @@
+- name: Detect cargo version
+  shell: 'cargo -v version'
+  register: cargo_version_detect
+  ignore_errors: true
+
+- name: Print cargo detected version
+  debug: var=cargo_version_detect.stdout_lines
+
+- name: Install curl
+  apt:
+    name: curl
+    state: present
+
+- name: Download rust installer
+  get_url:
+    url: https://sh.rustup.rs
+    dest: '{{ output_dir }}/sh.rustup.rs'
+    mode: '0755'
+    force: 'yes'
+  when: cargo_version_detect.failed
+
+- name: Install rust & cargo
+  shell: '{{ output_dir }}/sh.rustup.rs -y >> {{ log_dir }}/rust-installer.log 2>&1'
+  when: cargo_version_detect.failed
+
+- name: Remove install script
+  file:
+    path: '{{ output_dir }}/sh.rustup.rs'
+    state: absent
+

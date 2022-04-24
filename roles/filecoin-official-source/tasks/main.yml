@@ -3,4 +3,4 @@
     repo: 'https://github.com/filecoin-project/lotus.git'
     dest: '{{ filecoin_source_dir }}'
     version: '{{ version }}'
-    force: true
+    force: 'yes'

@@ -1,2 +1,3 @@
 dependencies:
   - role: go-installer
+  - role: rust-installer
