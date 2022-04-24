@@ -2,7 +2,7 @@
   environment:
     PATH: '{{ go_bin_dir }}:{{ ansible_env.PATH }}'
     FFI_BUILD_FROM_SOURCE: 1
-  shell: 'make clean {{ compile_target }} -j4 >> {{ log_dir }}/lotus-compiling.log'
+  shell: 'make clean {{ compile_target }} -j4 >> {{ log_dir }}/lotus-compiling.log 2>&1'
   args:
     chdir: '{{ filecoin_source_dir }}'
   register: lotus_builder
