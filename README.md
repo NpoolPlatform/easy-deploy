@@ -1,4 +1,4 @@
-## Easy deploy
+## Easy deploy ##
 
 * source config/environment
 * ansible-playbook playbooks/prepare/prepare.yml -i inventories/filecoin/plugin/staging
