@@ -1,15 +1,22 @@
-## Easy deploy ##
+# Easy deploy
 
+* Prepare environment
 ```
 * source config/environment
+```
+* Prepare groun_vars
+```
 * ansible-playbook playbooks/prepare/prepare.yml -i inventories/filecoin/plugin/staging
 * ansible-playbook playbooks/prepare/prepare.yml
-* ansible-playbook playbooks/prepare/prepare.yml -i inventories/filecoin/plugin
+```
+* Run playbook
+```
+* ansible-playbook playbooks/filecoin/plugin-chain.yml -i inventories/filecoin/plugin/staging
 ```
 
-## Filecoin role graph
+# Filecoin role graph
 
-# Plugin example
+## Plugin example
 
 ```
 [filecoin-chain]
