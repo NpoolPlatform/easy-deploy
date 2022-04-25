@@ -1,3 +1,4 @@
 version: v1.15.1
 filecoin_source_dir: '{{ source_dir }}/filecoin/official/lotus-{{ version }}'
 compile_target: all
+command_username_spec: '--username entropytest --password 12345679'
