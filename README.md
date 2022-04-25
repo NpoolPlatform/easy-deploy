@@ -9,11 +9,13 @@
 
 # Plugin example
 
+```
 [filecoin-chain]
 172.19.16.110 ansible_ssh_user=test ansible_ssh_pass=12345679 ansible_sudo_pass=12345679
 
 [filecoin:children]
 filecoin-chain
+```
 
 ```
 ansible-inventory -i inventories/filecoin/plugin/staging/ --graph
@@ -26,6 +28,7 @@ ansible-inventory -i inventories/filecoin/plugin/staging/ --graph
 
 # 2K cluster example
 
+```
 [filecoin-chain]
 172.19.16.110 ansible_ssh_user=test ansible_ssh_pass=12345679 ansible_sudo_pass=12345679
 
@@ -34,6 +37,7 @@ filecoin-chain
 
 [filecoin:children]
 filecoin-2k
+```
 
 ```
 ansible-inventory -i inventories/filecoin/plugin/2k/ --graph
