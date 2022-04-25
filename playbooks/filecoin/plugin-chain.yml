@@ -1,4 +1,4 @@
-- hosts: filecoin-chain
+- hosts: filecoin-official-chain
   roles:
     - common
     - filecoin-official-source
