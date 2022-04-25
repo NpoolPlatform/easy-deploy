@@ -1,9 +1,11 @@
 ## Easy deploy ##
 
+```
 * source config/environment
 * ansible-playbook playbooks/prepare/prepare.yml -i inventories/filecoin/plugin/staging
 * ansible-playbook playbooks/prepare/prepare.yml
 * ansible-playbook playbooks/prepare/prepare.yml -i inventories/filecoin/plugin
+```
 
 ## Filecoin role graph
 
