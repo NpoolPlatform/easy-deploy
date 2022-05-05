@@ -24,14 +24,33 @@
     line: 'nvmes:'
   delegate_to: 127.0.0.1
 
-- name: Generate nvme devices and mounts host vars
+- name: Generate nvme device name
   ansible.builtin.lineinfile:
     path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/nvmes'
     state: present
-    create: true
-    line: "  - name: {{ item }}
-         \n    mount: {{ (mounts | selectattr('device', 'search', item) | list)[0].mount }}
-         \n    device: {{ (mounts | selectattr('device', 'search', item) | list)[0].device }}"
+    line: "  - name: {{ item }}"
+  with_items:
+    - '{{ devices }}'
+  delegate_to: 127.0.0.1
+
+- name: Generate nvme device mount
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/nvmes'
+    state: present
+    insertafter: '  - name: {{ item }}'
+    line: "    mount: {{ (mounts | selectattr('device', 'search', item) | list)[0].mount }}"
+  when: mounts | selectattr("device", 'search', item) | list | length > 0
+  with_items:
+    - '{{ devices }}'
+  delegate_to: 127.0.0.1
+
+- name: Generate nvme device
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/nvmes'
+    state: present
+    insertafter: '  - name: {{ item }}'
+    line: "    device: {{ (mounts | selectattr('device', 'search', item) | list)[0].device }}"
+  when: mounts | selectattr("device", 'search', item) | list | length > 0
   with_items:
     - '{{ devices }}'
   delegate_to: 127.0.0.1
