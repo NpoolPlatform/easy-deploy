@@ -55,3 +55,13 @@
     - '{{ devices }}'
   delegate_to: 127.0.0.1
 
+- name: Generate nvme label
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/nvmes'
+    state: present
+    insertafter: '  - name: {{ item }}'
+    line: '    label: {{ ((item + "p1") | hash("sha256"))[0:12] }}'
+  with_items:
+    - '{{ devices }}'
+  delegate_to: 127.0.0.1
+
