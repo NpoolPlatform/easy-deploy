@@ -58,7 +58,7 @@
   with_items:
     - '{{ nvmes }}'
 
-- name: Mount nvme partitions
+- name: Mount nvme partitions with fail
   become: yes
   become_user: root
   become_method: sudo
@@ -67,6 +67,20 @@
     src: 'LABEL={{ item.label }}'
     fstype: xfs
     state: mounted
-    opts: nofail
+    opts: defaults
   with_items:
     - '{{ nvmes }}'
+
+- name: Mount nvme partitions with nofail
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.posix.mount:
+    path: '{{ item.mount }}'
+    src: 'LABEL={{ item.label }}'
+    fstype: xfs
+    state: mounted
+    opts: defaults,nofail
+  with_items:
+    - '{{ nvmes }}'
+
