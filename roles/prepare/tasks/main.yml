@@ -1,6 +1,3 @@
-- name: Print inventory directory
-  debug: var=inventory_dir
-
 - name: Create group_vars link
   ansible.builtin.file:
     src: ../../../group_vars

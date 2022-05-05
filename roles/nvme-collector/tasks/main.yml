@@ -1,3 +1,12 @@
-- name: Collect nvme mounts
-  ansible.builtin.debug:
-    var: ansible_facts.mounts | selectattr('device', 'search', 'nvme') | list
+- name: Generate nvme devices and mounts
+  set_fact:
+    devices: '{{ ansible_facts.devices.keys() | list | select("search", "nvme") | list }}'
+    mounts: '{{ ansible_facts.mounts | selectattr("device", "search", "nvme") | list }}'
+
+- name: Output nvme devices and mounts
+  debug:
+    msg: '{{ mounts | selectattr("device", "search", item) | list }}'
+  with_items:
+    - '{{ devices }}'
+
+
