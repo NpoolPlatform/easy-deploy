@@ -3,10 +3,31 @@
     devices: '{{ ansible_facts.devices.keys() | list | select("search", "nvme") | list }}'
     mounts: '{{ ansible_facts.mounts | selectattr("device", "search", "nvme") | list }}'
 
-- name: Output nvme devices and mounts
+- name: Create host vars directory
+  ansible.builtin.file:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}'
+    state: directory
+    recurse: yes
+  delegate_to: 127.0.0.1
+
+- name: Delete nvme variables
+  ansible.builtin.file:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/nvmes'
+    state: absent
+  delegate_to: 127.0.0.1
+
+- name: Create nvme variables
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/nvmes'
+    state: present
+    create: true
+    line: 'nvmes:'
+  delegate_to: 127.0.0.1
+
+- name: Generate nvme devices and mounts host vars
   debug:
     msg: '{{ mounts | selectattr("device", "search", item) | list }}'
   with_items:
     - '{{ devices }}'
-
+  delegate_to: 127.0.0.1
 
