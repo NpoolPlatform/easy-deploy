@@ -5,6 +5,13 @@
   with_items:
     - '{{ nvmes }}'
 
+- name: Precheck nvme partition label
+  fail:
+    msg: '{{ item }} label is not defined'
+  when: item.label is not defined
+  with_items:
+    - '{{ nvmes }}'
+
 - name: Umount exist volumn
   become: yes
   become_user: root
