@@ -1,0 +1,8 @@
+- name: Create nvme partitions
+  community.general.parted:
+    device: '/dev/{{ item.name }}'
+    number: 1
+    state: present
+    fs_type: xfs
+  with_items:
+    - '{{ nvmes }}'

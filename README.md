@@ -14,6 +14,12 @@
 * ansible-playbook playbooks/filecoin/plugin-chain.yml -i inventories/filecoin/plugin/staging
 ```
 
+# Install community module
+
+```
+ansible-galaxy collection install community.general
+```
+
 # Filecoin role graph
 
 ## Plugin example
@@ -35,7 +41,7 @@ ansible-inventory -i inventories/filecoin/plugin/staging/ --graph
 |--@ungrouped:
 ```
 
-# 2K cluster example
+## 2K cluster example
 
 ```
 [filecoin-chain]
@@ -58,14 +64,14 @@ ansible-inventory -i inventories/filecoin/plugin/2k/ --graph
 |--@ungrouped:
 ```
 
-## group_vars与host_vars
+# group_vars与host_vars
 
 ```
 默认变量全部定义于group_vars。特定主机将在运行时生成特定于主机的变量，
 存放在host_vars,路径未 host_vars/主机IP.
 ```
 
-## Commands
+# Commands
 
 * 生成主机NVME列表
 ```
