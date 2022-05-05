@@ -83,3 +83,7 @@ ansible-inventory -i inventories/filecoin/plugin/2k/ --graph
 ```
 ansible-playbook playbooks/collector/nvme.yml -i inventories/filecoin/plugin/staging
 ```
+* 为主机NVME创建分区并挂载倒指定目录
+```
+ansible-playbook playbooks/setup/nvmesetup.yml -i inventories/filecoin/plugin/staging
+```
