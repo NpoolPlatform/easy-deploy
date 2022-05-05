@@ -28,12 +28,6 @@
   with_items:
     - '{{ nvmes }}'
 
-- name: Print filesystem label
-  debug:
-    msg: '{{ ((item.name + "p1") | hash("sha256"))[0:12] }}'
-  with_items:
-    - '{{ nvmes }}'
-
 - name: Create nvme filesystem
   become: yes
   become_user: root
@@ -42,7 +36,7 @@
     device: '/dev/{{ item.name }}p1'
     fstype: xfs
     state: present
-    opts: '{{ -L item.name + "p1" }}'
+    opts: '-L {{ item.label }}'
   with_items:
     - '{{ nvmes }}'
 
@@ -63,7 +57,7 @@
   become_method: sudo
   ansible.posix.mount:
     path: '{{ item.mount }}'
-    src: '{{ LABEL=((item.name + "p1") | hash("sha256"))[0:12] }}'
+    src: 'LABEL={{ item.label }}'
     fstype: xfs
     state: mounted
     opts: nofail
