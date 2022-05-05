@@ -1,4 +1,19 @@
+- name: Umount exist volumn
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.posix.mount:
+    path: '{{ item.mount }}'
+    state: unmounted
+  when: item.mount is defined
+  with_items:
+    - '{{ nvmes }}'
+  ignore_errors: true
+
 - name: Create nvme partitions
+  become: yes
+  become_user: root
+  become_method: sudo
   community.general.parted:
     device: '/dev/{{ item.name }}'
     number: 1
