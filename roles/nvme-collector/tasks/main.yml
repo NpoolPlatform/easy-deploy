@@ -25,8 +25,13 @@
   delegate_to: 127.0.0.1
 
 - name: Generate nvme devices and mounts host vars
-  debug:
-    msg: '{{ mounts | selectattr("device", "search", item) | list }}'
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/nvmes'
+    state: present
+    create: true
+    line: "  - name: {{ item }}
+         \n    mount: {{ (mounts | selectattr('device', 'search', item) | list)[0].mount }}
+         \n    device: {{ (mounts | selectattr('device', 'search', item) | list)[0].device }}"
   with_items:
     - '{{ devices }}'
   delegate_to: 127.0.0.1

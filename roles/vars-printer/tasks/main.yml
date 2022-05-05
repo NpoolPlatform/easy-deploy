@@ -1,0 +1,3 @@
+- name: Print host vars
+  debug:
+    var: hostvars[inventory_hostname]
