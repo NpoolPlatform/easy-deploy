@@ -12,6 +12,17 @@
   with_items:
     - '{{ nvmes }}'
 
+- name: Check if nvme already mounted (1/2 - get nvme mount list)
+  set_fact:
+    mounts: '{{ ansible_facts.mounts | selectattr("device", "search", "nvme") | list }}'
+
+- name: Generate nvme device mount (2/2 - search my devices)
+  fail:
+    msg: '{{ item.device }} is already mounted at {{ (mounts | selectattr("device", "search", item.name) | list)[0].mount }}'
+  when: mounts | selectattr("device", 'search', item.name) | list | length > 0
+  with_items:
+    - '{{ nvmes }}'
+
 - name: Umount exist volumn
   become: yes
   become_user: root
