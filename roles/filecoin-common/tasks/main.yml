@@ -1,0 +1,5 @@
+- name: Create lotus log directory
+  ansible.builtin.file:
+    path: '{{ lotus_log_dir }}'
+    state: directory
+    recurse: yes

@@ -4,3 +4,6 @@ compile_target: all
 command_username_spec: '--username entropytest --password 12345679'
 chain_mountpoint: /opt/lotus
 miner_mountpoint: /opt/data
+lotus_log_dir: /var/log/lotus
+lotus_workspace_dir: /root/workspace
+lotus_tmp_dir: '{{ lotus_workspace_dir }}/lotustmpdir'

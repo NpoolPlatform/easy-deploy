@@ -1,17 +1,16 @@
 [Unit]
 Description=Lotus Daemon
-After=lotus-mount-disk.service
 
 [Service]
-Environment=GOLOG_FILE=/var/log/lotus/daemon.log
+Environment=GOLOG_FILE={{ lotus_log_dir }}/daemon.log
 Environment=GOLOG_LOG_FMT="json"
 Environment=GOLOG_LOG_LEVEL="INFO"
-Environment=TMPDIR=/root/workspace/lotustmpdir
-Environment=LOTUS_PATH=/opt/chain/lotus
-Environment=FIL_PROOFS_PARAMETER_CACHE=/root/workspace/filecoin-proof-parameters
+Environment=TMPDIR={{ lotus_tmp_dir }}
+Environment=LOTUS_PATH={{ chain_mountpoint }}/lotus
+Environment=FIL_PROOFS_PARAMETER_CACHE={{ lotus_workspace_dir }}/filecoin-proof-parameters
 Environment=FIL_PROOFS_MAXIMIZE_CACHING=1
-Environment=FIL_PROOFS_CACHE_DIR=/root/workspace/lotustmpdir/filecoin-parents
-ExecStart=/usr/local/bin/lotus --repo=/opt/chain/lotus daemon {{ command_username_spec }}
+Environment=FIL_PROOFS_CACHE_DIR={{ lotus_tmp_dir }}/filecoin-parents
+ExecStart=/usr/local/bin/lotus --repo={{ chain_mountpoint }}/lotus daemon {{ command_username_spec }}
 Restart=always
 RestartSec=10
 MemoryAccounting=true
