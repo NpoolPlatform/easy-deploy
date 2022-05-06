@@ -1,4 +1,6 @@
 - hosts: all
   roles:
     - common
-    - nvme-setup
+    - role: disk-setup
+      devices: '{{ nvmes }}'
+      device_pattern: nvme

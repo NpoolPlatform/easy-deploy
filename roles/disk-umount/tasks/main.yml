@@ -1,0 +1,14 @@
+- name: Get all nvme mountpoint
+  set_fact:
+    mounts: '{{ ansible_facts.mounts | selectattr("device", "search", device_pattern) | list }}'
+
+- name: Umount all nvme mountpoint
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.posix.mount:
+    path: '{{ item.mount }}'
+    state: absent
+  with_items:
+    - '{{ mounts }}'
+

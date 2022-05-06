@@ -1,0 +1,97 @@
+- name: Precheck mount point
+  fail:
+    msg: '{{ item }} mount point is not defined'
+  when: item.mount is not defined
+  with_items:
+    - '{{ devices }}'
+
+- name: Precheck partition label
+  fail:
+    msg: '{{ item }} label is not defined'
+  when: item.label is not defined
+  with_items:
+    - '{{ devices }}'
+
+- name: Check if already mounted (1/2 - get mount list)
+  set_fact:
+    mounts: '{{ ansible_facts.mounts | selectattr("device", "search", device_pattern) | list }}'
+
+- name: Generate device mount (2/2 - search my devices)
+  fail:
+    msg: '{{ item.device }} is already mounted at {{ (mounts | selectattr("device", "search", item.name) | list)[0].mount }}'
+  when: mounts | selectattr("device", 'search', item.name) | list | length > 0
+  with_items:
+    - '{{ devices }}'
+
+- name: Umount exist volumn
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.posix.mount:
+    path: '{{ item.mount }}'
+    state: unmounted
+  with_items:
+    - '{{ devices }}'
+  ignore_errors: true
+
+- name: Create partitions
+  become: yes
+  become_user: root
+  become_method: sudo
+  community.general.parted:
+    device: '/dev/{{ item.name }}'
+    number: 1
+    state: present
+    fs_type: xfs
+  with_items:
+    - '{{ devices }}'
+
+- name: Create filesystem
+  become: yes
+  become_user: root
+  become_method: sudo
+  community.general.filesystem:
+    device: '/dev/{{ item.name }}p1'
+    fstype: xfs
+    state: present
+    opts: '-L {{ item.label }}'
+  with_items:
+    - '{{ devices }}'
+
+- name: Create mount point
+  become: yes
+  become_user: root
+  become_method: sudo
+  file:
+    path: '{{ item.mount }}'
+    state: directory
+    recurse: yes
+  with_items:
+    - '{{ devices }}'
+
+- name: Mount partitions with fail
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.posix.mount:
+    path: '{{ item.mount }}'
+    src: 'LABEL={{ item.label }}'
+    fstype: xfs
+    state: mounted
+    opts: defaults
+  with_items:
+    - '{{ devices }}'
+
+- name: Mount partitions with nofail
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.posix.mount:
+    path: '{{ item.mount }}'
+    src: 'LABEL={{ item.label }}'
+    fstype: xfs
+    state: mounted
+    opts: defaults,nofail
+  with_items:
+    - '{{ devices }}'
+
