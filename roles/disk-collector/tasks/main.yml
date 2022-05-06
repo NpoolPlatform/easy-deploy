@@ -1,0 +1,67 @@
+- name: Generate devices and mounts
+  set_fact:
+    devices: '{{ ansible_facts.devices.keys() | list | select("search", device_pattern) | list }}'
+    mounts: '{{ ansible_facts.mounts | selectattr("device", "search", device_pattern) | list }}'
+
+- name: Create host vars directory
+  ansible.builtin.file:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}'
+    state: directory
+    recurse: yes
+  delegate_to: 127.0.0.1
+
+- name: Delete device variables
+  ansible.builtin.file:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/{{ device_type }}s'
+    state: absent
+  delegate_to: 127.0.0.1
+
+- name: Create device variables
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/{{ device_type }}s'
+    state: present
+    create: true
+    line: '{{ device_type }}s:'
+  delegate_to: 127.0.0.1
+
+- name: Generate device name
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/{{ device_type }}s'
+    state: present
+    line: "  - name: {{ item }}"
+  with_items:
+    - '{{ devices }}'
+  delegate_to: 127.0.0.1
+
+- name: Generate device mount
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/{{ device_type }}s'
+    state: present
+    insertafter: '  - name: {{ item }}'
+    line: "    mount: {{ (mounts | selectattr('device', 'search', item) | list)[0].mount }}"
+  when: mounts | selectattr("device", 'search', item) | list | length > 0
+  with_items:
+    - '{{ devices }}'
+  delegate_to: 127.0.0.1
+
+- name: Generate device
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/{{ device_type }}s'
+    state: present
+    insertafter: '  - name: {{ item }}'
+    line: "    device: {{ (mounts | selectattr('device', 'search', item) | list)[0].device }}"
+  when: mounts | selectattr("device", 'search', item) | list | length > 0
+  with_items:
+    - '{{ devices }}'
+  delegate_to: 127.0.0.1
+
+- name: Generate label
+  ansible.builtin.lineinfile:
+    path: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/{{ device_type }}s'
+    state: present
+    insertafter: '  - name: {{ item }}'
+    line: '    label: {{ ((item + "p1") | hash("sha256"))[0:12] }}'
+  with_items:
+    - '{{ devices }}'
+  delegate_to: 127.0.0.1
+
