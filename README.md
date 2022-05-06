@@ -87,3 +87,18 @@ ansible-playbook playbooks/collector/nvme.yml -i inventories/filecoin/plugin/sta
 ```
 ansible-playbook playbooks/setup/nvmesetup.yml -i inventories/filecoin/plugin/staging
 ```
+
+# 部署filecoin plugin钱包
+
+```
+创建NVME list
+ansible-playbook playbooks/collector/nvme.yml -i inventories/filecoin/plugin/staging
+卸载所有NVME分区
+ansible-playbook playbooks/helper/nvmeumount.yml -i inventories/filecoin/plugin/staging
+修改NVME host_vars列表，将待用盘的mount参数修改为chain挂载点，其中，chain挂载点已经定义为chain_mountpoint
+路径：inventory文件同级目录下，host_vars中的主机IP路径下的nvmes文件
+创建分区（如果需要）并挂载
+ansible-playbook playbooks/setup/nvmesetup.yml -i inventories/filecoin/plugin/staging
+部署filecoin官方钱包程序
+* ansible-playbook playbooks/filecoin/plugin-chain.yml -i inventories/filecoin/plugin/staging
+```
