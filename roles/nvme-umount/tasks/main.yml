@@ -1,6 +1,6 @@
 - name: Umount all nvme mountpoint
   import_role:
-    name: disk-setup
+    name: disk-umount
   vars:
     device_pattern: nvme
 
