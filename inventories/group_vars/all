@@ -8,3 +8,5 @@ go_source_dir: '{{ go_dir }}/source'
 go_bin_dir: '{{ go_dir }}/bin'
 
 rust_bin_dir: '{{ lookup("env","HOME") }}/.cargo/bin'
+
+chain_mountpoint: /opt/chain
