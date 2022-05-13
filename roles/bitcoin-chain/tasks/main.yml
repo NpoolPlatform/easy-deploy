@@ -18,6 +18,23 @@
     dest: '{{ bitcoin_source_dir }}'
   delegate_to: 127.0.0.1
 
+- name: Create bitcoin user
+  become: yes
+  become_user: root
+  become_method: sudo
+  user:
+    name: bitcoin
+    state: present
+
+- name: Stop bitcoind daemon
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: stopped
+    name: bitcoind
+  ignore_errors: true
+
 - name: Copy execution binary
   become: yes
   become_user: root
@@ -25,3 +42,22 @@
   copy:
     src: '{{ bitcoin_copy_dir }}/'
     dest: /usr
+
+- name: Copy bitcoind service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: bitcoind.service.j2
+    dest: /etc/systemd/system/bitcoind.service
+    owner: root
+    group: root
+
+- name: Start bitcoind daemon
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: bitcoind
