@@ -1,0 +1,7 @@
+- name: Generate vdisk devices and mounts
+  import_role:
+    name: disk-collector
+  vars:
+    device_pattern: vd
+    device_type: vdisk
+
