@@ -1,0 +1,4 @@
+- hosts: bitcoin-chain
+  roles:
+    - common
+    - bitcoin-chain
