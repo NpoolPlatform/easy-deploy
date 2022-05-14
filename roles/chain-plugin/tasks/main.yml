@@ -8,7 +8,7 @@
     state: started
     restart: yes
     restart_policy: always
-    command: plugin run
+    command: run
     env:
       PROXY: '{{ chain_plugin_proxy }}'
       CONTACT: '{{ wallet_plugin_contact }}'
