@@ -1,4 +1,7 @@
 - name: Deploy docker for coin plugin
+  become: yes
+  become_user: root
+  become_method: sudo
   docker_container:
     name: '{{ container_name }}'
     image: 'uhub.service.ucloud.cn/entropypool/sphinx-plugin:{{ chain_plugin_version }}'

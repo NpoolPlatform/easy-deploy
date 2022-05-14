@@ -26,6 +26,12 @@ ansible-galaxy collection install community.general
 ansible-galaxy collection install ansible.posix
 ```
 
+# Install community.docker
+
+```
+ansible-galaxy collection install community.docker
+```
+
 # Filecoin role graph
 
 ## Plugin example

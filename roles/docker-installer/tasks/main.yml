@@ -1,0 +1,13 @@
+- name: Install docker
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt:
+    name: docker-ce
+    update_cache: true
+
+- name: Install docker py
+  pip:
+    name: docker
+    extra_args: -i https://pypi.python.org/pypi
+
