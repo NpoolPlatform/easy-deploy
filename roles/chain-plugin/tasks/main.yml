@@ -1,0 +1,17 @@
+- name: Deploy docker for coin plugin
+  docker_container:
+    name: '{{ container_name }}'
+    image: 'uhub.service.ucloud.cn/entropypool/sphinx-plugin:{{ chain_plugin_version }}'
+    state: started
+    restart: yes
+    restart_policy: always
+    command: plugin run
+    env:
+      PROXY: '{{ chain_plugin_proxy }}'
+      CONTACT: '{{ wallet_plugin_contact }}'
+      ENV_COIN_NET: '{{ coin_net }}'
+      ENV_COIN_TYPE: '{{ wallet_plugin_env_coin_type }}'
+      ENV_COIN_API: '{{ wallet_plugin_env_coin_api }}'
+      ENV_COIN_TOKEN: '{{ wallet_plugin_env_coin_token }}'
+      ENV_COIN_USER: '{{ wallet_plugin_env_coin_user }}'
+      ENV_COIN_PASS: '{{ wallet_plugin_env_coin_pass }}'

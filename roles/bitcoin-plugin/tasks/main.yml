@@ -1,0 +1,11 @@
+- name: Deploy docker for bitcoin plugin
+  import_role:
+    name: chain-plugin
+  vars:
+    container_name: bitcoin-plugin
+    wallet_plugin_contact: ''
+    wallet_plugin_env_coin_type: bitcoin
+    wallet_plugin_env_coin_api: '{{ ansible_default_ipv4.address }}:8332'
+    wallet_plugin_env_coin_token: ''
+    wallet_plugin_env_coin_user: '{{ bitcoin_rpcuser }}'
+    wallet_plugin_env_coin_pass: '{{ bitcoin_rpcpassword }}'
