@@ -111,7 +111,7 @@ ansible-playbook playbooks/filecoin/plugin-chain.yml -i inventories/filecoin/plu
 如果存储已经有数据并且已经格式化并且有数据，将所分配存储挂载到/opt/chain
 如果存储为新硬盘
 cd inventories; git clone https://github.com/NpoolHosts/procyon.git; cd -
-* ansible-playbook playbooks/prepare/prepare.yml -i inventories/bitcoin/plugin/production
+ansible-playbook playbooks/prepare/prepare.yml -i inventories/bitcoin/plugin/production
 创建vdisk list
 ansible-playbook playbooks/collector/vdisk.yml -i inventories/bitcoin/plugin/production
 卸载所有vdisk分区
