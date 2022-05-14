@@ -21,12 +21,10 @@ Wants=network-online.target
 ExecStart=/usr/bin/bitcoind -daemonwait \
                             -rpcallowip=0.0.0.0/0 \
                             -rpcbind=0.0.0.0 \
-                            -rpcwallet=bitcoin-wallet \
                             -rpcuser={{ bitcoin_rpcuser }} \
                             -rpcpassword={{ bitcoin_rpcpassword }} \
                             {{ network_environment }} \
                             -pid=/run/bitcoind/bitcoind.pid \
-                            -conf=/etc/bitcoin/bitcoin.conf \
                             -datadir={{ chain_mountpoint }}/bitcoind
 
 # Make sure the config directory is readable by the service user
