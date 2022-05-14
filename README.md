@@ -129,3 +129,9 @@ ansible-playbook playbooks/setup/vdisksetup.yml -i inventories/bitcoin/plugin/pr
 部署bitcoin官方钱包程序
 ansible-playbook playbooks/bitcoin/chain.yml -i inventories/bitcoin/plugin/production
 ```
+
+# 部署procyon钱包预计plugin
+
+```
+ansible-playbook playbooks/procyon/wallet.yml -i inventories/procyon/plugin/production
+```
