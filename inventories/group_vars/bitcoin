@@ -8,3 +8,4 @@ network_environment: ''
 
 bitcoin_rpcuser: '{{ lookup("env","BITCOIN_RPCUSER") }}'
 bitcoin_rpcpassword: '{{ lookup("env","BITCOIN_RPCPASSWORD") }}'
+default_wallet: bitcoin_wallet

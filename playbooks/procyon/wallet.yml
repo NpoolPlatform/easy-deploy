@@ -1,0 +1,2 @@
+- name: Deploy bitcoin chain
+  import_playbook: ../bitcoin/chain.yml

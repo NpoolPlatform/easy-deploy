@@ -30,7 +30,8 @@ ExecStart=/usr/bin/bitcoind -daemonwait \
 # Make sure the config directory is readable by the service user
 PermissionsStartOnly=true
 ExecStartPre=/bin/chgrp bitcoin /etc/bitcoin
-ExecStop=/usr/bin/bitcoin-cli stop
+ExecStartPost=-/usr/bin/bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} loadwallet {{ default_wallet }}
+ExecStop=/usr/bin/bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} stop
 
 # Process management
 ####################
