@@ -100,5 +100,26 @@ ansible-playbook playbooks/helper/nvmeumount.yml -i inventories/filecoin/plugin/
 创建分区（如果需要）并挂载
 ansible-playbook playbooks/setup/nvmesetup.yml -i inventories/filecoin/plugin/staging
 部署filecoin官方钱包程序
-* ansible-playbook playbooks/filecoin/plugin-chain.yml -i inventories/filecoin/plugin/staging
+ansible-playbook playbooks/filecoin/plugin-chain.yml -i inventories/filecoin/plugin/staging
+```
+
+# 部署bitcoin plugin钱包
+
+```
+购买云主机，分配存储
+登录云主机
+如果存储已经有数据并且已经格式化并且有数据，将所分配存储挂载到/opt/chain
+如果存储为新硬盘
+cd inventories; git clone https://github.com/NpoolHosts/procyon.git; cd -
+* ansible-playbook playbooks/prepare/prepare.yml -i inventories/bitcoin/plugin/production
+创建vdisk list
+ansible-playbook playbooks/collector/vdisk.yml -i inventories/bitcoin/plugin/production
+卸载所有vdisk分区
+ansible-playbook playbooks/helper/vdiskumount.yml -i inventories/filecoin/plugin/production
+修改vdisk host_vars列表，将待用盘的mount参数修改为chain挂载点，其中，chain挂载点已经定义为chain_mountpoint
+路径：inventory文件同级目录下，host_vars中的主机IP路径下的vdisks文件
+创建分区（如果需要）并挂载
+ansible-playbook playbooks/setup/vdisksetup.yml -i inventories/bitcoin/plugin/production
+部署bitcoin官方钱包程序
+ansible-playbook playbooks/bitcoin/chain.yml -i inventories/bitcoin/plugin/production
 ```
