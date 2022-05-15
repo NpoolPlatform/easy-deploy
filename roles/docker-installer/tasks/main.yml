@@ -2,12 +2,14 @@
   become: yes
   become_user: root
   become_method: sudo
-  apt:
-    name: docker-ce
-    update_cache: true
-
-- name: Install docker py
-  pip:
-    name: docker
-    extra_args: -i https://pypi.python.org/pypi
-
+  shell: curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+  #   apt:
+  #     name: docker-ce
+  #     update_cache: true
+  # 
+  # - name: Install docker py
+  #   pip:
+  #     name: docker
+  #     extra_args: -i https://pypi.python.org/pypi
+- name: start enable docker
+  systemd: name=docker state=started enabled=yes
