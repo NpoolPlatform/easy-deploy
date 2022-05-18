@@ -3,7 +3,7 @@
     name: chain-plugin
   vars:
     container_name: bitcoin-plugin-{{ target_environment }}
-    wallet_plugin_contact: ''
+    wallet_plugin_contract: ''
     wallet_plugin_env_coin_type: bitcoin
     wallet_plugin_env_coin_api: '{{ ansible_default_ipv4.address }}:8332'
     wallet_plugin_env_coin_token: ''

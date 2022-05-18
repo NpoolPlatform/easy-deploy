@@ -3,7 +3,7 @@
     name: chain-plugin
   vars:
     container_name: 'solana-plugin-{{ target_environment }}'
-    wallet_plugin_contact: ''
+    wallet_plugin_contract: ''
     wallet_plugin_env_coin_type: solana
     wallet_plugin_env_coin_api: '{{ solana_cluster_api }}'
     wallet_plugin_env_coin_token: ''
