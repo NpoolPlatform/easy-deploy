@@ -9,3 +9,6 @@
 
 - name: Deploy ethereum plugin
   import_playbook: ../ethereum/plugin.yml
+
+- name: Deploy solana plugin
+  import_playbook: ../solana/plugin.yml

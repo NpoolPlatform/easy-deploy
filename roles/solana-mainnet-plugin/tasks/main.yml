@@ -1,0 +1,5 @@
+- name: Deploy docker for solana mainnet plugin
+  import_role:
+    name: solana-plugin
+  vars:
+    solana_cluster_api: https://api.mainnet-beta.solana.com
