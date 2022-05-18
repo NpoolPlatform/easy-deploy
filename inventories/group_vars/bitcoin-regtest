@@ -1,2 +1,2 @@
 network_environment: -regtest
-coin_net: main
+coin_net: test

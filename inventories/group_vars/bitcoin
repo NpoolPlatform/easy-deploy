@@ -1,6 +1,6 @@
-version: 23.0
-downloaded_package: bitcoin-23.0-x86_64-linux-gnu.tar.gz
-download_url: 'https://bitcoincore.org/bin/bitcoin-core-23.0/{{ downloaded_package }}'
+version: 22.0
+downloaded_package: bitcoin-22.0-x86_64-linux-gnu.tar.gz
+download_url: 'https://bitcoincore.org/bin/bitcoin-core-22.0/{{ downloaded_package }}'
 bitcoin_source_dir: '{{ source_dir }}'
 bitcoin_copy_dir: '{{ bitcoin_source_dir }}/bitcoin-{{ version }}'
 
