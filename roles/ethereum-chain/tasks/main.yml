@@ -1,0 +1,6 @@
+- main: Download ethereum package
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt_repository:
+    repo: ppa:ethereum/ethereum
