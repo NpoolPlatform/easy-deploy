@@ -1,0 +1,4 @@
+- hosts: ethereum-chain
+  roles:
+    - common
+    - usdterc20-plugin
