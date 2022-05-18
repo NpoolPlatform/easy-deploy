@@ -1,9 +1,14 @@
+- name: Check wallet info
+  command: 'bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} getwalletinfo'
+  register: check_wallet
+
 - name: Download bitcoin tarball
   get_url:
     url: '{{ download_url }}'
     dest: '{{ source_dir }}/{{ downloaded_package }}'
     checksum: sha256:2cca490c1f2842884a3c5b0606f179f9f937177da4eadd628e3f7fd7e25d26d0
   delegate_to: 127.0.0.1
+  when: check_wallet.failed
 
 - name: Create destination directory
   ansible.builtin.file:
@@ -11,12 +16,14 @@
     state: directory
     recurse: yes
   delegate_to: 127.0.0.1
+  when: check_wallet.failed
 
 - name: Untar execution binary
   ansible.builtin.unarchive:
     src: '{{ source_dir }}/{{ downloaded_package }}'
     dest: '{{ bitcoin_source_dir }}'
   delegate_to: 127.0.0.1
+  when: check_wallet.failed
 
 - name: Create bitcoin user
   become: yes
@@ -25,6 +32,7 @@
   user:
     name: bitcoin
     state: present
+  when: check_wallet.failed
 
 - name: Stop bitcoind daemon
   become: yes
@@ -34,6 +42,7 @@
     state: stopped
     name: bitcoind
   ignore_errors: true
+  when: check_wallet.failed
 
 - name: Copy execution binary
   become: yes
@@ -43,6 +52,7 @@
     src: '{{ bitcoin_copy_dir }}/'
     dest: /usr
     mode: preserve
+  when: check_wallet.failed
 
 - name: Copy bitcoind service file
   become: yes
@@ -53,6 +63,7 @@
     dest: /etc/systemd/system/bitcoind.service
     owner: root
     group: root
+  when: check_wallet.failed
 
 - name: Create chain directory
   become: yes
@@ -64,6 +75,7 @@
     recurse: yes
     owner: bitcoin
     group: bitcoin
+  when: check_wallet.failed
 
 - name: Start bitcoind daemon
   become: yes
@@ -73,14 +85,17 @@
     state: started
     daemon_reload: yes
     name: bitcoind
+  when: check_wallet.failed
 
 - name: Create bitcoin wallet
   command: 'bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} -named createwallet wallet_name={{ default_wallet }} descriptors=false load_on_startup=true avoid_reuse=true'
   ignore_errors: true
+  when: check_wallet.failed
 
 - name: Load bitcoin wallet
   command: 'bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} loadwallet {{ default_wallet }}'
   ignore_errors: true
+  when: check_wallet.failed
 
 - name: Get wallet info
   command: 'bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} getwalletinfo'
