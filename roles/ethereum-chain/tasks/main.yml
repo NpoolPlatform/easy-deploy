@@ -1,6 +1,41 @@
-- main: Download ethereum package
+- name: Add ethereum ppa
   become: yes
   become_user: root
   become_method: sudo
   apt_repository:
     repo: ppa:ethereum/ethereum
+
+- name: Install ethereum package
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt:
+    name: ethereum
+    update_cache: true
+
+- name: Copy geth service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: geth.service.j2
+    dest: /etc/systemd/system/geth.service
+    owner: root
+    group: root
+
+- name: Create ethereum user
+  become: yes
+  become_user: root
+  become_method: sudo
+  user:
+    name: ethereum
+    state: present
+
+- name: Start geth daemon
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: geth

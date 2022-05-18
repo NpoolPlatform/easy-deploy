@@ -1,0 +1,13 @@
+[Unit]
+Description=Ethereum Client
+After=syslog.target network.target
+
+[Service]
+User=ethereum
+Group=ethereum
+Restart=always
+RestartSec=10s
+ExecStart=/usr/bin/geth --cache 2048 --http --http.addr=0.0.0.0 --datadir={{ chain_mountpoint }}/ethereum
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+- hosts: ethereum-chain
+  roles:
+    - common
+    - ethereum-chain
