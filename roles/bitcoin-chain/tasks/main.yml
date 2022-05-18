@@ -86,6 +86,7 @@
     state: started
     daemon_reload: yes
     name: bitcoind
+    enabled: yes
   when: check_wallet.failed
 
 - name: Create bitcoin wallet

@@ -50,3 +50,4 @@
     state: started
     daemon_reload: yes
     name: geth
+    enabled: yes

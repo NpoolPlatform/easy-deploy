@@ -32,3 +32,4 @@
     state: started
     daemon_reload: yes
     name: lotus-daemon
+    enabled: yes
