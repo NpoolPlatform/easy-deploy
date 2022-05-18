@@ -70,7 +70,7 @@
     name: bitcoind
 
 - name: Create bitcoin wallet
-  command: 'bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} createwallet {{ default_wallet }}'
+  command: 'bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} descriptors=false createwallet {{ default_wallet }}'
   ignore_errors: true
 
 - name: Load bitcoin wallet
