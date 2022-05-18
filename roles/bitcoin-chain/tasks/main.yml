@@ -54,6 +54,12 @@
     owner: root
     group: root
 
+- name: Create chain directory
+  ansible.builtin.file:
+    path: '{{ chain_mountpoint }}/bitcoind'
+    state: directory
+    recurse: yes
+
 - name: Start bitcoind daemon
   become: yes
   become_user: root

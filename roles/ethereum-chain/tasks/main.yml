@@ -31,6 +31,12 @@
     name: ethereum
     state: present
 
+- name: Create chain directory
+  ansible.builtin.file:
+    path: '{{ chain_mountpoint }}/ethereum'
+    state: directory
+    recurse: yes
+
 - name: Start geth daemon
   become: yes
   become_user: root
