@@ -55,10 +55,15 @@
     group: root
 
 - name: Create chain directory
+  become: yes
+  become_user: root
+  become_method: sudo
   ansible.builtin.file:
     path: '{{ chain_mountpoint }}/bitcoind'
     state: directory
     recurse: yes
+    owner: bitcoin
+    group: bitcoin
 
 - name: Start bitcoind daemon
   become: yes
@@ -70,7 +75,7 @@
     name: bitcoind
 
 - name: Create bitcoin wallet
-  command: 'bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} createwallet {{ default_wallet }}'
+  command: 'bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} -named createwallet wallet_name={{ default_wallet }} descriptors=false load_on_startup=true avoid_reuse=true'
   ignore_errors: true
 
 - name: Load bitcoin wallet

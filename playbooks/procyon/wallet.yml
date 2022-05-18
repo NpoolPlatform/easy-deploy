@@ -3,3 +3,9 @@
 
 - name: Deploy bitcoin plugin
   import_playbook: ../bitcoin/plugin.yml
+
+- name: Deploy ethereum chain
+  import_playbook: ../ethereum/chain.yml
+
+- name: Deploy ethereum plugin
+  import_playbook: ../ethereum/plugin.yml

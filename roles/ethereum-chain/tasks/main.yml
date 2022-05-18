@@ -32,10 +32,15 @@
     state: present
 
 - name: Create chain directory
+  become: yes
+  become_user: root
+  become_method: sudo
   ansible.builtin.file:
     path: '{{ chain_mountpoint }}/ethereum'
     state: directory
     recurse: yes
+    owner: ethereum
+    group: ethereum
 
 - name: Start geth daemon
   become: yes

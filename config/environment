@@ -2,3 +2,5 @@
 
 export ANSIBLE_CONFIG=$PWD/config/ansible.cfg
 export ENVIRONMENT=production
+export BITCOIN_RPCUSER=test
+export BITCOIN_RPCPASSWORD=12345679
