@@ -1,5 +1,6 @@
 - name: Check wallet info
   command: 'bitcoin-cli -rpcuser={{ bitcoin_rpcuser }} -rpcpassword={{ bitcoin_rpcpassword }} getwalletinfo'
+  ignore_errors: true
   register: check_wallet
 
 - name: Download bitcoin tarball
