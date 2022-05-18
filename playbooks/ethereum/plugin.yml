@@ -1,4 +1,4 @@
-- hosts: bitcoin-chain
+- hosts: ethereum-chain
   roles:
     - common
-    - bitcoin-plugin
+    - ethereum-plugin

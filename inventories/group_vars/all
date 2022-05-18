@@ -14,4 +14,4 @@ chain_mountpoint: /opt/chain
 chain_plugin_version: 0.1.5
 chain_plugin_proxy: sphinx.proxy.api.npool.top:80
 
-target_environment: '{{ lookup("env", "ENVIRONMENT") }}'
+target_environment: '{{ lookup("env", "ENVIRONMENT") | default("production") }}'
