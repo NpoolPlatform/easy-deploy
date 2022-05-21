@@ -1,0 +1,11 @@
+- name: Deploy docker for ethereum plugin
+  import_role:
+    name: chain-plugin
+  vars:
+    container_name: usdttrc20-plugin-{{ target_environment }}
+    wallet_plugin_contract: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'
+    wallet_plugin_env_coin_type: usdttrc20
+    wallet_plugin_env_coin_api: '34.237.210.82:50051,3.218.137.187:50051,18.209.42.127:50051'
+    wallet_plugin_env_coin_token: ''
+    wallet_plugin_env_coin_user: ''
+    wallet_plugin_env_coin_pass: ''

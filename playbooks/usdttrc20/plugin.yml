@@ -1,0 +1,4 @@
+- hosts: ethereum-chain
+  roles:
+    - common
+    - usdttrc20-mainnet-plugin

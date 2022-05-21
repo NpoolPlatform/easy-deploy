@@ -11,7 +11,7 @@ rust_bin_dir: '{{ lookup("env","HOME") }}/.cargo/bin'
 
 chain_mountpoint: /opt/chain
 
-chain_plugin_version: 0.1.9
+chain_plugin_version: 0.1.11
 chain_plugin_proxy: sphinx.proxy.api.npool.top:20401
 
 target_environment: '{{ lookup("env", "ENVIRONMENT") | default("production") }}'

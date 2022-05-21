@@ -5,6 +5,7 @@
   apt:
     name: docker-ce
     update_cache: true
+    cache_valid_time: 432000
 
 - name: Install docker py
   pip:

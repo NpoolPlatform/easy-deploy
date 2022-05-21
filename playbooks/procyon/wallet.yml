@@ -13,5 +13,8 @@
 - name: Deploy usdterc20 plugin
   import_playbook: ../usdterc20/plugin.yml
 
+- name: Deploy usdttrc20 plugin
+  import_playbook: ../usdttrc20/plugin.yml
+
 - name: Deploy solana plugin
   import_playbook: ../solana/plugin.yml
