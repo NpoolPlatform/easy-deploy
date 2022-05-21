@@ -10,8 +10,8 @@
     restart_policy: always
     command: run
     env:
-      PROXY: '{{ chain_plugin_proxy }}'
-      CONTRACT: '{{ wallet_plugin_contract }}'
+      ENV_PROXY: '{{ chain_plugin_proxy }}'
+      ENV_CONTRACT: '{{ wallet_plugin_contract }}'
       ENV_COIN_NET: '{{ coin_net }}'
       ENV_COIN_TYPE: '{{ wallet_plugin_env_coin_type }}'
       ENV_COIN_API: '{{ wallet_plugin_env_coin_api }}'
