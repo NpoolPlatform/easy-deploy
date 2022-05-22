@@ -5,7 +5,7 @@
     container_name: ethereum-plugin-{{ target_environment }}
     wallet_plugin_contract: ''
     wallet_plugin_env_coin_type: ethereum
-    wallet_plugin_env_coin_api: '{{ ansible_default_ipv4.address }}:8545'
+    wallet_plugin_env_coin_api: 'http://{{ ansible_default_ipv4.address }}:8545'
     wallet_plugin_env_coin_token: ''
     wallet_plugin_env_coin_user: ''
     wallet_plugin_env_coin_pass: ''
