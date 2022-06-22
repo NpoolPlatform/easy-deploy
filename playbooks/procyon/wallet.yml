@@ -1,17 +1,20 @@
-- name: Deploy bitcoin chain
-  import_playbook: ../bitcoin/chain.yml
+#- name: Deploy bitcoin chain
+#  import_playbook: ../bitcoin/chain.yml
 
 - name: Deploy bitcoin plugin
   import_playbook: ../bitcoin/plugin.yml
 
-- name: Deploy ethereum chain
-  import_playbook: ../ethereum/chain.yml
+#- name: Deploy ethereum chain
+#  import_playbook: ../ethereum/chain.yml
 
 - name: Deploy ethereum plugin
   import_playbook: ../ethereum/plugin.yml
 
 - name: Deploy usdterc20 plugin
   import_playbook: ../usdterc20/plugin.yml
+
+- name: Deploy tron plugin
+  import_playbook: ../tron/plugin.yml
 
 - name: Deploy usdttrc20 plugin
   import_playbook: ../usdttrc20/plugin.yml

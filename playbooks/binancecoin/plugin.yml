@@ -1,0 +1,4 @@
+- hosts: binancecoin-chain
+  roles:
+    - common
+    - binancecoin-mainnet-plugin

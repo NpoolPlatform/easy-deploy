@@ -1,0 +1,11 @@
+- name: Deploy docker for binanceusd plugin
+  import_role:
+    name: chain-plugin
+  vars:
+    container_name: binanceusd-plugin-{{ target_environment }}
+    wallet_plugin_contract: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56'
+    wallet_plugin_env_coin_type: binanceusd
+    wallet_plugin_env_coin_api: 'https://bsc-dataseed4.ninicoin.io'
+    wallet_plugin_env_coin_token: ''
+    wallet_plugin_env_coin_user: ''
+    wallet_plugin_env_coin_pass: ''

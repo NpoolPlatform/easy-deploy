@@ -3,6 +3,7 @@ source_dir: '{{ lookup("env","HOME") }}/.easy.deploy.source'
 log_dir: '{{ output_dir }}/log'
 
 go_version: 1.17.6
+ansible_python_interpreter: python3
 go_dir: '{{ lookup("env","HOME") }}/go'
 go_source_dir: '{{ go_dir }}/source'
 go_bin_dir: '{{ go_dir }}/bin'
@@ -11,7 +12,7 @@ rust_bin_dir: '{{ lookup("env","HOME") }}/.cargo/bin'
 
 chain_mountpoint: /opt/chain
 
-chain_plugin_version: 0.1.15
+chain_plugin_version: 0.1.21
 chain_plugin_proxy: proxy.procyon.vip:80
 
 target_environment: '{{ lookup("env", "ENVIRONMENT") | default("production") }}'

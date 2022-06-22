@@ -4,3 +4,4 @@
     - role: disk-setup
       devices: '{{ nvmes }}'
       device_pattern: nvme
+      partition_suffix: p1

@@ -1,0 +1,7 @@
+- hosts: all
+  roles:
+    - common
+    - role: disk-setup
+      devices: '{{ vdisks }}'
+      device_pattern: vdisk
+      partition_suffix: ''

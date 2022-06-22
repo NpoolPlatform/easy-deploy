@@ -45,18 +45,20 @@
     fs_type: xfs
   with_items:
     - '{{ devices }}'
+  ignore_errors: true
 
 - name: Create filesystem
   become: yes
   become_user: root
   become_method: sudo
   community.general.filesystem:
-    device: '/dev/{{ item.name }}p1'
+    device: '/dev/{{ item.name }}{{ partition_suffix }}'
     fstype: xfs
     state: present
     opts: '-L {{ item.label }}'
   with_items:
     - '{{ devices }}'
+  ignore_errors: true
 
 - name: Create mount point
   become: yes

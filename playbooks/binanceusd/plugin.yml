@@ -1,0 +1,4 @@
+- hosts: binanceusd-chain
+  roles:
+    - common
+    - binanceusd-mainnet-plugin

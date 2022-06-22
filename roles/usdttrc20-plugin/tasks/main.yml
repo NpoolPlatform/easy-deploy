@@ -1,4 +1,4 @@
-- name: Deploy docker for ethereum plugin
+- name: Deploy docker for usdttrc20 plugin
   import_role:
     name: chain-plugin
   vars:
