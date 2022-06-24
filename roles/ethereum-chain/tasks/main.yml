@@ -5,6 +5,34 @@
   apt_repository:
     repo: ppa:ethereum/ethereum
 
+- name: Check ethereum version
+  shell:
+    cmd: 'geth version | grep {{ geth_version }}'
+  ignore_errors: yes
+  register: check_geth_version
+
+- name: Print check_geth_version
+  debug:
+    var:
+      "check_geth_version"
+
+- name: Stop geth service
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: geth
+    state: stopped
+  when: check_geth_version.rc !=0
+
+- name: Upgrade ethereum
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: 'apt upgrade geth -y'
+  when: check_geth_version.rc !=0
+
 - name: Install ethereum package
   become: yes
   become_user: root
@@ -12,6 +40,7 @@
   apt:
     name: ethereum
     update_cache: true
+    state: latest
 
 - name: Copy geth service file
   become: yes

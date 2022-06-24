@@ -1,1 +1,1 @@
-chain_plugin_proxy: sphinx.proxy.api.npool.top:20401
+chain_plugin_proxy: proxy.npool.top:20401

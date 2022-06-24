@@ -2,6 +2,7 @@ output_dir: '{{ lookup("env", "HOME") }}/.easy.deploy.output'
 source_dir: '{{ lookup("env","HOME") }}/.easy.deploy.source'
 log_dir: '{{ output_dir }}/log'
 
+geth_version: 1.10.19
 go_version: 1.17.6
 ansible_python_interpreter: python3
 go_dir: '{{ lookup("env","HOME") }}/go'
