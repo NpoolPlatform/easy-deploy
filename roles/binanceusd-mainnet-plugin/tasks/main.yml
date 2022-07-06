@@ -5,7 +5,8 @@
     container_name: binanceusd-plugin-{{ target_environment }}
     wallet_plugin_contract: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56'
     wallet_plugin_env_coin_type: binanceusd
-    wallet_plugin_env_coin_api: 'https://bsc-dataseed4.ninicoin.io'
+    wallet_plugin_env_coin_local_api: ''
+    wallet_plugin_env_coin_public_api: 'https://bsc-dataseed1.ninicoin.io,https://bsc-dataseed.binance.org,https://bsc-dataseed1.defibit.io,https://bsc.nodereal.io'
     wallet_plugin_env_coin_token: ''
     wallet_plugin_env_coin_user: ''
     wallet_plugin_env_coin_pass: ''
