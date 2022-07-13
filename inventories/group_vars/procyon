@@ -1,1 +1,1 @@
-chain_plugin_proxy: sphinx.proxy.api.procyon.vip:80
+chain_plugin_proxy: proxy.ohhash.com:80

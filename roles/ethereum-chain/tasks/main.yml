@@ -24,6 +24,7 @@
     name: geth
     state: stopped
   when: check_geth_version.rc !=0
+  ignore_errors: yes
 
 - name: Upgrade ethereum
   become: yes

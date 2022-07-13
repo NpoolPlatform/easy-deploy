@@ -14,6 +14,6 @@ rust_bin_dir: '{{ lookup("env","HOME") }}/.cargo/bin'
 chain_mountpoint: /opt/chain
 
 chain_plugin_version: 0.1.23
-chain_plugin_proxy: proxy.procyon.vip:80
+chain_plugin_proxy: proxy.ohhash.com:80
 
 target_environment: '{{ lookup("env", "ENVIRONMENT") | default("production") }}'
