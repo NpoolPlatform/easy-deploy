@@ -1,0 +1,4 @@
+- hosts: solana-chain
+  roles:
+    - common
+    - solana-testnet-plugin

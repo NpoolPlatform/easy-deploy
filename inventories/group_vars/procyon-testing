@@ -1,1 +1,4 @@
-chain_plugin_proxy: sphinx.proxy.api.npool.top:20401
+chain_plugin_proxy: 'proxy.npool.top:20401'
+wallet_plugin_env_coin_position: 'jh-testing'
+wallet_plugin_env_coin_wan_ip: '172.21.250.12'
+coin_net: test
