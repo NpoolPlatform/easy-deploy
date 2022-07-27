@@ -6,6 +6,3 @@
     wallet_plugin_contract: '{{ usdttrc20_contract }}'
     wallet_plugin_env_coin_type: usdttrc20
     wallet_plugin_env_coin_api: '{{ usdttrc20_cluster_api }}'
-    wallet_plugin_env_coin_token: ''
-    wallet_plugin_env_coin_user: ''
-    wallet_plugin_env_coin_pass: ''

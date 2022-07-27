@@ -7,6 +7,3 @@
     wallet_plugin_env_coin_type: binanceusd
     wallet_plugin_env_coin_local_api: ''
     wallet_plugin_env_coin_public_api: 'https://bsc-dataseed1.ninicoin.io,https://bsc-dataseed.binance.org,https://bsc-dataseed1.defibit.io,https://bsc.nodereal.io'
-    wallet_plugin_env_coin_token: ''
-    wallet_plugin_env_coin_user: ''
-    wallet_plugin_env_coin_pass: ''

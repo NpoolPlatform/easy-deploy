@@ -7,6 +7,3 @@
     wallet_plugin_env_coin_type: usdterc20
     wallet_plugin_env_coin_local_api: 'http://{{ ansible_default_ipv4.address }}:8545'
     wallet_plugin_env_coin_public_api: ''
-    wallet_plugin_env_coin_token: ''
-    wallet_plugin_env_coin_user: ''
-    wallet_plugin_env_coin_pass: ''
