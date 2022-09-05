@@ -1,0 +1,26 @@
+- name: Deploy ethereum chain
+  import_playbook: ../ethereum/chain.yml
+
+- name: Deploy ethereum plugin
+  import_playbook: ../ethereum/plugin.yml
+
+- name: Deploy usdterc20 plugin
+  import_playbook: ../usdterc20/plugin.yml
+
+- name: Deploy usdcerc20 plugin
+  import_playbook: ../usdcerc20/plugin.yml
+
+- name: Deploy tron plugin
+  import_playbook: ../tron/plugin.yml
+
+- name: Deploy usdttrc20 plugin
+  import_playbook: ../usdttrc20/plugin.yml
+
+- name: Deploy solana plugin
+  import_playbook: ../solana/plugin.yml
+
+- name: Deploy binancecoin plugin
+  import_playbook: ../binancecoin/plugin.yml
+
+- name: Deploy binanceusd plugin
+  import_playbook: ../binanceusd/plugin.yml
