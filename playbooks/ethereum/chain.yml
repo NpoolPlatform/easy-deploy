@@ -2,3 +2,4 @@
   roles:
     - common
     - ethereum-chain
+    - ethereum-beacon

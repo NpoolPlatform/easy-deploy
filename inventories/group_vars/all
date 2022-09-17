@@ -2,7 +2,7 @@ output_dir: '{{ lookup("env", "HOME") }}/.easy.deploy.output'
 source_dir: '{{ lookup("env","HOME") }}/.easy.deploy.source'
 log_dir: '{{ output_dir }}/log'
 
-geth_version: 1.10.23
+geth_version: 1.10.25
 go_version: 1.17.6
 ansible_python_interpreter: python3
 go_dir: '{{ lookup("env","HOME") }}/go'
@@ -16,3 +16,5 @@ chain_mountpoint: /opt/chain
 chain_plugin_version: 0.1.31
 
 target_environment: '{{ lookup("env", "ENVIRONMENT") | default("production") }}'
+
+prysm_sync_url: 'https://2Er0xAZFHDZVE9gXSiw9sMb7xGl:b5a89091527211e0007786438c4e3261@eth2-beacon-mainnet.infura.io'

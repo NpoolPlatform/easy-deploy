@@ -1,0 +1,18 @@
+- name: Deploy docker for prysm beacon chain
+  become: yes
+  become_user: root
+  become_method: sudo
+  docker_container:
+    name: 'beacon-node'
+    image: 'gcr.io/prysmaticlabs/prysm/beacon-chain:stable'
+    state: started
+    restart: yes
+    restart_policy: always
+    command: --datadir=/data --jwt-secret=/tmp/gethjwt.hex --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --monitoring-host=0.0.0.0 --execution-endpoint=http://{{ ansible_default_ipv4.address }}:8551 --checkpoint-sync-url={{ prysm_sync_url }}
+    volumes:
+      - '{{ chain_mountpoint }}/.eth2:/data'
+      - "/tmp/:/tmp/"
+    ports:
+      - "4000:4000"
+      - "13000:13000"
+      - "12000:12000/udp"
