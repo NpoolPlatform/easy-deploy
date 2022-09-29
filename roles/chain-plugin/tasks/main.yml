@@ -19,3 +19,7 @@
       ENV_POSITION: '{{ wallet_plugin_env_coin_position }}'
       ENV_WAN_IP: '{{ wallet_plugin_env_coin_wan_ip }}'
       ENV_SYNC_INTERVAL: ''
+      ENV_BUILD_CHAIN_SERVER: '{{ wallet_build_chain_server }}'
+      all_proxy: '{{ all_proxy }}'
+      https_proxy: '{{ https_proxy }}'
+      no_proxy: '{{ no_proxy }}'

@@ -1,0 +1,19 @@
+- name: Deploy docker for build chain
+  become: yes
+  become_user: root
+  become_method: sudo
+  docker_container:
+    name: 'build-chain-{{ target_environment }}'
+    image: 'uhub.service.ucloud.cn/entropypool/build-chain:{{ build_chain_version }}'
+    state: started
+    restart: yes
+    restart_policy: always
+    ports: 
+      - '{{ http_port }}:50490'
+      - '{{ rpc_port }}:50491'
+    volumes: '{{ volume_dir }}:/data'
+    command: 
+    env:
+      ENV_ETH_ENDPOINT: '{{ wallet_plugin_env_coin_api }}'
+      ENV_INVERSTOR_KEY: '{{ wallet_inverstor_key }}'
+      all_proxy: '{{ all_proxy }}'
