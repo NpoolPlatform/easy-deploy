@@ -53,6 +53,49 @@
     state: directory
     recurse: yes
 
+- name: Install nfs
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt:
+    name: nfs-kernel-server
+
+- name: Prepare nfs dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '{{ swan_provider_download_dir }}'
+    state: directory
+    recurse: yes
+
+- name: Check nfs mountpoint
+  shell:
+    cmd: 'mount | grep {{ swan_provider_download_dir }} | grep -w {{ swan_device }}'
+  ignore_errors: yes
+  register: check_mount_device
+
+- name: Unmount device
+  become: yes
+  become_user: root
+  become_method: sudo
+  mount:
+    state: unmounted
+    path: '{{ swan_provider_download_dir }}'
+  when: check_mount_device.rc != 0
+
+- name: Mount device
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.posix.mount:
+    src: '{{ swan_storage }}:{{ swan_device }}'
+    path: '{{ swan_provider_download_dir }}'
+    opts: ro
+    state: mounted
+    fstype: nfs
+  when: check_mount_device.rc != 0
+
 - name: Start swan provider daemon
   become: yes
   become_user: root
