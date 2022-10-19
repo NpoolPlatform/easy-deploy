@@ -15,7 +15,7 @@
   become_method: sudo
   ansible.builtin.get_url:
     url: '{{ swan_provider_download_url }}'
-    dest: /home/test/swan-provider
+    dest: /usr/local/bin/swan-provider
     mode: 777
   when: check_swan_version.rc !=0
 
