@@ -1,0 +1,4 @@
+- hosts: aria2
+  roles:
+    - common
+    - aria2

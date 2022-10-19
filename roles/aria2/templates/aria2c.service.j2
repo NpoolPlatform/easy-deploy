@@ -1,0 +1,11 @@
+[Unit]
+Description=Aria2c download manager
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/bin/aria2c --enable-rpc --rpc-listen-all --conf-path=/etc/aria2/aria2.conf
+
+[Install]

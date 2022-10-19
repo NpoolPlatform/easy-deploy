@@ -1,0 +1,64 @@
+- name: Check swan provider version
+  shell:
+    cmd: 'swan-provider version | grep {{ swan_version }}'
+  ignore_errors: yes
+  register: check_swan_version
+
+- name: Print check_swan_version
+  debug:
+    var:
+      "check_swan_version"
+
+- name: Download swan provider release
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.get_url:
+    url: '{{ swan_provider_download_url }}'
+    dest: /home/test/swan-provider
+    mode: 777
+  when: check_swan_version.rc !=0
+
+- name: Copy swan provider service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: swan-provider.service.j2
+    dest: /etc/systemd/system/swan-provider.service
+
+- name: Create swan config directory
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '/root/.swan/provider/'
+    state: directory
+    recurse: yes
+
+- name: Copy swan provider config
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: config.toml.j2
+    dest: /root/.swan/provider/config.toml
+
+- name: Create log directory
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '/var/log/swan'
+    state: directory
+    recurse: yes
+
+- name: Start swan provider daemon
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: swan-provider
+    enabled: yes

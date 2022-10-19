@@ -1,0 +1,5 @@
+- hosts: swan-provider
+  roles:
+    - common
+      #    - aria2
+    - swan-provider

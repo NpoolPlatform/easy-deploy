@@ -1,0 +1,13 @@
+[Unit]
+Description=Swan Provier
+
+[Service]
+ExecStart=/usr/local/bin/swan-provider daemon
+StandardOutput=append:/var/log/swan/provider.output.log
+StandardError=append:/var/log/swan/provider.error.log
+Restart=always
+RestartSec=10
+User=root
+
+[Install]
+WantedBy=multi-user.target

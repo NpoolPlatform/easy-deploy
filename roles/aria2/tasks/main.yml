@@ -1,0 +1,49 @@
+- name: Install aria2
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt:
+      name: aria2
+
+- name: Copy aria2 provider service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: aria2c.service.j2
+    dest: /etc/systemd/system/aria2c.service
+
+- name: Create aria2c config dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '/etc/aria2/'
+    state: directory
+    recurse: yes
+
+- name: Copy aria2c config
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: aria2.conf.j2
+    dest: /etc/aria2/aria2.conf
+
+- name: Touch aria2 session file
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '/etc/aria2/aria2.session'
+    state: touch
+
+- name: Start aria2 service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: aria2c
+    enabled: yes
