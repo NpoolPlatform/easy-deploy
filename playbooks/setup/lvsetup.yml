@@ -1,0 +1,7 @@
+- hosts: all
+  roles:
+    - common
+    - role: lv-setup
+      devices: '{{ disks}}'
+      #      device_pattern: '{{ device_pattern }}'
+      #      partition_suffix: '{{ partition_suffix }}'

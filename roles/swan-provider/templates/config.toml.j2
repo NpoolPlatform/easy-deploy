@@ -7,6 +7,7 @@ market_api_url="http://{{ MINER_IP }}:{{ MINER_PORT }}/rpc/v0"   # Url of lotus 
 market_access_token="{{ MINER_ACCESS_TOKEN }}"   # Access token of lotus market web api, when market and miner are not separate, it is also the access token of miner web api
 
 [aria2]
+aria2_candidate_dirs = ["{{ ARIA2_CANDIDATE_DIRS }}"]
 aria2_download_dir = "/home/test/download/car"   # Directory where offline deal files will be downloaded for importing
 aria2_host = "127.0.0.1"  # Aria2 server address
 aria2_port = 6800         # Aria2 server port

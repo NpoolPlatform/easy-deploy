@@ -1,0 +1,17 @@
+[Unit]
+Description=Boostd service
+
+[Service]
+Environment=GOLOG_LOG_FMT="json"
+Environment=RUST_LOG=info
+Environment=GOLOG_FILE=/var/log/lotus/boostd.log
+Environment=BOOST_PATH=/opt/data
+Environment=FULLNODE_API_INFO={{ FULLNODE_API_INFO }}
+ExecStart=/usr/local/bin/boostd -vv run
+Restart=always
+RestartSec=10
+Delegate=yes
+User=root
+
+[Install]
+WantedBy=multi-user.target

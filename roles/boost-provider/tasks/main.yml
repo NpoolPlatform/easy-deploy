@@ -1,0 +1,78 @@
+- name: Check boost provider version
+  shell:
+    cmd: 'boostd --version | grep {{ boostd_version }}'
+  ignore_errors: yes
+  register: check_boostd_version
+
+- name: Print check_boostd_version
+  debug:
+    var:
+      "check_boostd_version"
+
+- name: Download boost provider release
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.get_url:
+    url: '{{ boostd_download_url }}'
+    dest: /usr/local/bin/boostd
+    mode: 777
+  when: check_boostd_version.rc !=0
+
+- name: Copy boostd env file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: boostd-env.sh.j2
+    dest: '{{ workspace_env_dir }}/boostd-env.sh'
+
+- name: Install nfs
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt:
+    name: nfs-kernel-server
+
+- name: Check if boostd repo exists
+  become: yes
+  become_user: root
+  become_method: sudo
+  stat:
+    path: '/opt/data/config.toml'
+  register: file_status
+
+- name: Init boostd repo
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: 'bash {{ workspace }}/boostd-init.sh'
+  when:
+      file_status.stat.exists == False
+
+- name: Copy boostd service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: boostd.service.j2
+    dest: /etc/systemd/system/boostd.service
+
+- name: Copy boostd config
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: config.toml.j2
+    dest: /opt/data/config.toml
+
+- name: Start boostd service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: boostd
+    enabled: yes

@@ -1,0 +1,4 @@
+- hosts: boost-provider
+  roles:
+    - common
+    - boost-provider

@@ -1,0 +1,61 @@
+- name: Create partitions # cannot alwats parted
+  become: yes
+  become_user: root
+  become_method: sudo
+  community.general.parted:
+    device: '/dev/{{ item.name }}'
+    number: 1
+    state: present
+    fs_type: xfs
+  with_items:
+    - '{{ devices }}'
+  ignore_errors: true
+
+- name: Check vg exsits
+  become: yes
+  become_user: root
+  become_method: sudo
+  command: vgdisplay vg.services
+  register: vgdisplay
+  ignore_errors: true
+
+- name: Create or resize a volume group
+  become: yes
+  become_user: root
+  become_method: sudo
+  community.general.lvg:
+    vg: vg.services
+    pvs: '/dev/{{ item.name }}'
+    state: present
+  with_items:
+    - '{{ devices }}'
+    #  when: vgdisplay.rc != 0
+
+  # - name: Check lv exsits
+  #   become: yes
+  #   become_user: root
+  #   become_method: sudo
+  #   command: lvdisplay lvtest
+  #   register: lvdisplay
+  #   ignore_errors: true
+  # 
+  # - name: Create a logical volume
+  #   become: yes
+  #   become_user: root
+  #   become_method: sudo
+  #   community.general.lvol:
+  #     vg: vg.services
+  #     lv: lvtest
+  #     size: 100%FREE
+  #   when: lvdisplay.rc != 0
+  # 
+  # - name: Create filesystem
+  #   become: yes
+  #   become_user: root
+  #   become_method: sudo
+  #   community.general.filesystem:
+  #     device: '/dev/vg.services/lvtest'
+  #     fstype: xfs
+  #     state: present
+  #     opts: '-L lvtest'
+  #   ignore_errors: true
