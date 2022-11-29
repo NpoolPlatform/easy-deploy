@@ -67,6 +67,14 @@
     src: config.toml.j2
     dest: /opt/data/config.toml
 
+- name: Copy storage.json
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: storage.json.j2
+    dest: /opt/data/storage.json
+
 - name: Start boostd service
   become: yes
   become_user: root

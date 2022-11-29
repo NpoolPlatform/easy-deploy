@@ -20,8 +20,8 @@ swan_version: 2.0.0
 swan_provider_download_url: http://172.19.108.102:9999/fil-proofs-parameters/swan/swan-provider-2.0.0-linux-amd64
 swan_provider_download_dir: /home/test/download
 
-boostd_version: 1.2.0
-boostd_download_url: http://172.19.108.102:9999/fil-proofs-parameters/boost/boostd-1.2.0-linux-amd64
+boostd_version: 1.5.0
+boostd_download_url: http://172.19.108.102:9999/fil-proofs-parameters/boost/boostd-1.5.0-linux-amd64
 
 target_environment: '{{ lookup("env", "ENVIRONMENT") | default("production") }}'
 

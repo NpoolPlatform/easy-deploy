@@ -10,6 +10,12 @@ Environment=FULLNODE_API_INFO={{ FULLNODE_API_INFO }}
 ExecStart=/usr/local/bin/boostd -vv run
 Restart=always
 RestartSec=10
+Nice=-20
+LimitNICE=-20
+LimitNOFILE=100000:1048576
+LimitCORE=infinity
+LimitCORE=1024
+LimitNPROC=819200:1048576
 Delegate=yes
 User=root
 
