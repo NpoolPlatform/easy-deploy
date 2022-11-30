@@ -1,0 +1,76 @@
+- name: Install ubuntu dependencies
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - build-essential
+    - curl
+    - clang
+    - gcc
+    - libssl-dev
+    - llvm
+    - make
+    - pkg-config
+    - tmux
+    - xz-utils
+  when:
+    - ansible_pkg_mgr == 'apt'
+
+- name: Disable ufw
+  become: yes
+  become_user: root
+  become_method: sudo
+  community.general.ufw:
+    state: disabled
+  when:
+    - ansible_pkg_mgr == 'apt'
+
+- name: Allow port 4133 and 3033
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.posix.firewalld:
+    port: '{{ item }}'
+    permanent: yes
+    state: enabled
+  with_items:
+    - 4133/tcp
+    - 3033/tcp
+  when:
+    - ansible_pkg_mgr == 'yum'
+
+- name: reload service firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
+  when:
+    - ansible_pkg_mgr == 'yum'
+
+- name: Copy aleo service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: aleo-snarkos.service.j2
+    dest: /etc/systemd/system/aleo-snarkos.service
+
+- name: Download aleo snarkos release
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.get_url:
+      url: '{{ snarkos_download_url }}'
+      dest: /usr/local/bin/snarkos
+      mode: 777
+
+- name: Start aleo-snarkos service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+      state: restarted
+      daemon_reload: yes
+      name: aleo-snarkos
+      enabled: yes
+
+

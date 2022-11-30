@@ -1,0 +1,12 @@
+[Unit]
+Description=Aleo snarkos
+
+[Service]
+ExecStart=/usr/local/bin/snarkos start --nodisplay --prover {{ PRIVATE_KEY }} --verbosity 0
+Restart=always
+RestartSec=10
+Delegate=yes
+User=root
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,5 @@
+- hosts: aleo-miner
+  roles:
+    - rust-installer
+    - nvidia-installer
+    - aleo
