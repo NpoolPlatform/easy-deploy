@@ -30,3 +30,7 @@ prysm_sync_url: 'https://2Er0xAZFHDZVE9gXSiw9sMb7xGl:b5a89091527211e0007786438c4
 workspace_env_dir: /etc/profile.d/
 workspace: /home/test/workspace
 snarkos_download_url: http://172.19.108.102:9999/fil-proofs-parameters/snarkos/snarkos
+
+ALEO_GPU_DRIVER_VERSION: 460.84
+ALEO_GPU_DRIVER_DOWNLOAD_URL: http://172.19.108.102:9999/fil-proofs-parameters/tools/NVIDIA-Linux-x86_64-460.84.run
+ALEO_GPU_DRIVER: NVIDIA-Linux-x86_64-460.84.run

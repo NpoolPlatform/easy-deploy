@@ -1,5 +1,94 @@
-# - name: Reboot test
-#   become: yes
-#   become_user: root
-#   become_method: sudo
-#   reboot:
+- name: Detect GPU
+  shell:
+    cmd: 'lspci | grep NV | grep VGA'
+  ignore_errors: yes
+  register: detect_gpu
+
+- name: Print lspci responce
+  debug:
+    var:
+      "detect_gpu.stdout"
+
+- name: Detect GPU running status
+  shell:
+    cmd: 'nvidia-smi -L'
+  ignore_errors: yes
+  register: detect_gpu_status
+  when: detect_gpu.rc == 0
+
+- name: Print GPU running status
+  debug:
+    var:
+      "detect_gpu_status.stdout"
+
+- name: Download GPU driver
+  get_url:
+      url: '{{ gpu_driver_download_url }}'
+      dest: '{{ output_dir }}/{{ gpu_driver }}'
+      mode: 0755
+      force: yes
+
+- name: Detect GPU driver version
+  shell:
+    cmd: 'nvidia-smi -a |grep {{ gpu_driver_version }}'
+  ignore_errors: yes
+  register: detect_driver_version
+  when: detect_gpu.rc == 0
+
+- name: Print installed gpu driver version
+  debug:
+    var:
+      "detect_driver_version.stdout"
+  when: detect_gpu.rc == 0
+
+- name: Uninstall current GPU driver
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: 'nvidia-uninstall -s'
+    cmd: 'rm /usr/local/cuda* -rf'
+    cmd: 'rm /etc/ld.so.conf.d/cuda* -rf'
+  ignore_errors: yes
+  when: detect_driver_version.rc != 0
+
+- name: Install target GPU driver
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: '{{ output_dir }}/{{ gpu_driver }} --silent'
+  ignore_errors: yes
+  register: install_response
+  ignore_errors: yes
+  when: detect_driver_version.rc != 0
+
+- name: Reboot test
+  become: yes
+  become_user: root
+  become_method: sudo
+  reboot:
+  ignore_errors: yes
+  when: install_response.rc != 0
+
+- name: Install target GPU driver
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: '{{ output_dir }}/{{ gpu_driver }} --silent'
+  ignore_errors: yes
+  when: detect_gpu.rc == 0
+
+- name: Detect GPU driver version
+  shell:
+    cmd: 'nvidia-smi -a |grep {{ gpu_driver_version }}'
+  ignore_errors: yes
+  register: detect_driver_version
+  when: detect_gpu.rc == 0
+
+- name: Print installed gpu driver version
+  debug:
+    var:
+      "detect_driver_version.stdout"
+  when: detect_gpu.rc == 0

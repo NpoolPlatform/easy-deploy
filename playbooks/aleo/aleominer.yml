@@ -3,3 +3,7 @@
     - rust-installer
     - nvidia-installer
     - aleo
+  vars:
+    gpu_driver_version: '{{ ALEO_GPU_DRIVER_VERSION }}'
+    gpu_driver: '{{ ALEO_GPU_DRIVER }}'
+    gpu_driver_download_url: '{{ ALEO_GPU_DRIVER_DOWNLOAD_URL }}'
