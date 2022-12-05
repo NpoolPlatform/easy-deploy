@@ -1,3 +1,15 @@
+- name: disable services
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.service:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  with_items:
+    - hpool-aleo
+    - aleo-damo
+
 - name: Copy aleo service file
   become: yes
   become_user: root
@@ -22,5 +34,5 @@
   systemd:
       state: restarted
       daemon_reload: yes
-      name: aleo-daemo
+      name: aleo-damo
       enabled: yes
