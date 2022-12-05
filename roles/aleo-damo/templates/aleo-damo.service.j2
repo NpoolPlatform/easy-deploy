@@ -1,0 +1,10 @@
+[Unit]
+Description=Aleo damo
+
+[Service]
+ExecStart=/usr/local/bin/damominer --address {{ ALEO_ADDRESS }} --proxy {{ ALEO_DAMO_PROXY }} --worker {{ ansible_host }}
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

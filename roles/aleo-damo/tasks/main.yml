@@ -1,0 +1,26 @@
+- name: Copy aleo service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: aleo-damo.service.j2
+    dest: /etc/systemd/system/aleo-damo.service
+
+- name: Download aleo damo release
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.get_url:
+      url: '{{ ALEO_DAMO_DOWNLOAD_URL }}'
+      dest: /usr/local/bin/damominer
+      mode: 777
+
+- name: Start aleo damo service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+      state: restarted
+      daemon_reload: yes
+      name: aleo-daemo
+      enabled: yes
