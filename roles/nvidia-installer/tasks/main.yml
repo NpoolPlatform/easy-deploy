@@ -57,6 +57,9 @@
   become_user: root
   become_method: sudo
   shell:
+    cmd: 'echo "blacklist nouveau" > /etc/modprobe.d/blacklist-nouveau.conf'
+    cmd: 'echo "options nouveau modeset=0" >> /etc/modprobe.d/blacklist-nouveau.conf'
+    cmd: 'update-initramfs -u'
     cmd: '{{ output_dir }}/{{ gpu_driver }} --silent'
   ignore_errors: yes
   register: install_response
