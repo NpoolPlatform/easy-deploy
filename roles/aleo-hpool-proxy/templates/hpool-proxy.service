@@ -1,0 +1,10 @@
+[Unit]
+Description=Hpool proxy
+
+[Service]
+ExecStart=/usr/local/bin/x-proxy-aleo-linux-amd64 --config /etc/hpool-proxy-config-{{ ALEO_PROXY_PORT }}.yaml
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

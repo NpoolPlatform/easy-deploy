@@ -1,0 +1,60 @@
+- name: disable services
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.service:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  with_items:
+    - hpool-aleo
+    - aleo-damo
+    - aleo-hpool
+  ignore_errors: yes
+
+- name: Prepare GPU_NUMS for aleo config
+  shell: 'nvidia-smi -L | wc -l'
+  register: GPU_NUMS
+
+- name: Prepare TASK_THREADS for aleo config
+  shell: "CPU_CORE=`lscpu | grep 'Core(s) per socket' | awk -F '[ :]+' '{print $4}'`;CPU_SOCKETS=`lscpu | grep 'Socket(s)' | awk -F '[ :]+' '{print $2}'`;CPU_CORES=`expr $CPU_CORE '*' $CPU_SOCKETS`;echo $CPU_CORES;TASK_THREADS=`expr $CPU_CORES // $GPU_NUMS`;echo $TASK_THREADS"
+  register: TASK_THREADS
+
+- name: Prepare GPU DEVICE for aleo config
+  shell: 'GPU_NUMS=`nvidia-smi -L | wc -l`;DEVICES=`expr $GPU_NUMS - 1`;DEVICE="";for i in `seq 0 $DEVICES`; do [ x$DEVICE != x ] && DEVICE=$DEVICE, ;DEVICE=$DEVICE$i;done;echo $DEVICE'
+  register: DEVICE
+
+- name: Copy aleo config file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: config.yaml.j2
+    dest: /etc/aleo.yaml
+
+- name: Copy aleo service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: aleo-hpool.service.j2
+    dest: /etc/systemd/system/aleo-hpool.service
+
+- name: Download aleo hpool release
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.get_url:
+      url: '{{ ALEO_HPOOL_DOWNLOAD_URL }}'
+      dest: /usr/local/bin/hpool-miner-aleo-cuda
+      mode: 777
+
+- name: Start aleo hpool service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+      state: restarted
+      daemon_reload: yes
+      name: aleo-hpool
+      enabled: yes

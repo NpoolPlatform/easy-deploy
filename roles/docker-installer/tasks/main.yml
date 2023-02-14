@@ -27,7 +27,7 @@
   become_method: sudo
   apt:
       name: docker-ce
-      state: latest
+      state: present
       update_cache: true
 
 - name: Install Docker Module for Python

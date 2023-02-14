@@ -1,0 +1,21 @@
+minerName: "{{ ansible_host }}"
+apiKey: "{{ ALEO_HPOOL_APIKEY }}"
+log:
+  level: info
+  path: /var/log/aleo/
+
+server:
+  proxy: "http://{{ ALEO_HPOOL_PROXY }}:{{ ALEO_PROXY_PORT }}"
+
+proxy:
+  url: ""
+  username: ""
+  password: ""
+language: cn
+line: cn
+
+extraParams:
+    devices: {{ DEVICE.stdout }}
+    cpuAffinityStep: 1
+    taskThreads: {{ TASK_THREADS.stdout }}
+    cpuAffinityStart: 0

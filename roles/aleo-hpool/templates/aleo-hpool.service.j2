@@ -1,0 +1,10 @@
+[Unit]
+Description=Hpool Aleo
+
+[Service]
+ExecStart=/usr/local/bin/hpool-miner-aleo-cuda --config /etc/aleo.yaml
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

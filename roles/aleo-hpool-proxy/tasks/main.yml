@@ -1,0 +1,61 @@
+- name: disable services
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.service:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  with_items:
+    - hpool-proxy-{{ ALEO_PROXY_PORT }}
+  ignore_errors: yes
+
+- name: Create hpool proxy directory
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '/var/lib/hpool-proxy'
+    state: directory
+    recurse: yes
+
+- name: Clear hpool proxy db
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'rm -rf /var/lib/hpool-proxy/proxy-{{ ALEO_PROXY_PORT }}.db'
+
+- name: Copy hpool aleo proxy config file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: hpool-proxy-config.yaml.j2
+    dest: /etc/hpool-proxy-config-{{ ALEO_PROXY_PORT }}.yaml
+
+- name: Copy hpool aleo proxy service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: hpool-proxy.service
+    dest: /etc/systemd/system/hpool-proxy-{{ ALEO_PROXY_PORT }}.service
+
+- name: Download hpool aleo proxy release
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.get_url:
+      url: '{{ ALEO_HPOOL_PROXY_DOWNLOAD_URL }}'
+      dest: /usr/local/bin/x-proxy-aleo-linux-amd64
+      mode: 777
+
+- name: Start hpool aleo proxy service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+      state: restarted
+      daemon_reload: yes
+      name: hpool-proxy-{{ ALEO_PROXY_PORT }}
+      enabled: yes

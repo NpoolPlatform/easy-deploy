@@ -2,7 +2,7 @@ output_dir: '{{ lookup("env", "HOME") }}/.easy.deploy.output'
 source_dir: '{{ lookup("env","HOME") }}/.easy.deploy.source'
 log_dir: '{{ output_dir }}/log'
 
-geth_version: 1.10.25
+geth_version: 1.10.26
 go_version: 1.17.6
 ansible_python_interpreter: python3
 go_dir: '{{ lookup("env","HOME") }}/go'
@@ -13,7 +13,7 @@ rust_bin_dir: '{{ lookup("env","HOME") }}/.cargo/bin'
 
 chain_mountpoint: /opt/chain
 
-chain_plugin_version: 0.1.33
+chain_plugin_version: 0.1.41
 
 swan_version: 2.0.0
 # swan_provider_download_url: https://github.com/filswan/go-swan-provider/releases/download/v2.0.0/swan-provider-2.0.0-linux-amd64
@@ -25,15 +25,22 @@ boostd_download_url: http://172.19.108.102:9999/fil-proofs-parameters/boost/boos
 
 target_environment: '{{ lookup("env", "ENVIRONMENT") | default("production") }}'
 
-prysm_sync_url: 'https://2Er0xAZFHDZVE9gXSiw9sMb7xGl:b5a89091527211e0007786438c4e3261@eth2-beacon-mainnet.infura.io'
+prysm_sync_url: 'https://beaconstate.info'
 
-workspace_env_dir: /etc/profile.d/
+# # # # # # Aleo
 workspace: /home/test/workspace
-snarkos_download_url: http://172.19.108.102:9996/toollist/aleo/snarkos
-
 ALEO_GPU_DRIVER_VERSION: 515.43
 ALEO_GPU_DRIVER_DOWNLOAD_URL: http://172.19.108.102:9996/toollist/NVIDIA-Linux-x86_64-515.43.04.run
 ALEO_GPU_DRIVER: NVIDIA-Linux-x86_64-515.43.04.run
 
-ALEO_DAMO_PROXY: 'asia1.damominer.hk:9090'
-ALEO_DAMO_DOWNLOAD_URL: 'http://172.19.108.102:9996/toollist/aleo/damominer_v1.4.0'
+# snarkos aleo
+workspace_env_dir: /etc/profile.d/
+snarkos_download_url: http://172.19.108.102:9996/toollist/aleo/snarkos
+
+# damo aleo
+ALEO_DAMO_PROXY: 'asiahk.damominer.hk:9090'
+ALEO_DAMO_DOWNLOAD_URL: 'http://172.19.108.102:9996/toollist/aleo/damominer_v1.5.3'
+
+# hpool aleo
+ALEO_HPOOL_PROXY_DOWNLOAD_URL: 'http://172.19.108.102:9996/toollist/aleo/x-proxy-aleo-linux-amd64'
+ALEO_HPOOL_DOWNLOAD_URL: 'http://172.19.108.102:9996/toollist/aleo/hpool-miner-aleo-cuda'

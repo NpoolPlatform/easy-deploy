@@ -1,0 +1,16 @@
+server:
+    host: 0.0.0.0
+    port: {{ ALEO_PROXY_PORT }}
+    url: ""
+dbFile: "/var/lib/hpool-proxy/proxy-{{ ALEO_PROXY_PORT }}.db"
+chains:
+    -
+        chain: aleo
+        apiKey: "{{ ALEO_HPOOL_APIKEY }}"
+proxy:
+  url: ""
+  username: ""
+  password: ""
+log:
+  level: "info"
+  out: "/var/log/hpool-proxy-{{ ALEO_PROXY_PORT }}.log"
