@@ -1,0 +1,4 @@
+- hosts: aleo-chain
+  roles:
+    - common
+    - aleo-plugin

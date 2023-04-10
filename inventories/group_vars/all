@@ -13,7 +13,8 @@ rust_bin_dir: '{{ lookup("env","HOME") }}/.cargo/bin'
 
 chain_mountpoint: /opt/chain
 
-chain_plugin_version: 0.1.41
+# docker_image:uhub.service.ucloud.cn/entropypool/sphinx-plugin
+# chain_plugin_version: 0.1.41
 
 swan_version: 2.0.0
 # swan_provider_download_url: https://github.com/filswan/go-swan-provider/releases/download/v2.0.0/swan-provider-2.0.0-linux-amd64

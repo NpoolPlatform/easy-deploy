@@ -4,7 +4,7 @@
   become_method: sudo
   docker_container:
     name: '{{ container_name }}'
-    image: 'uhub.service.ucloud.cn/entropypool/sphinx-plugin:{{ chain_plugin_version }}'
+    image: '{{ chain_plugin_image }}:{{ chain_plugin_version }}'
     log_driver: json-file
     log_options:
       max-size: 50k
@@ -12,7 +12,7 @@
     state: started
     restart: yes
     restart_policy: always
-    command: run
+    command: '{{ plugin_run }}'
     env:
       ENV_PROXY: '{{ chain_plugin_proxy }}'
       ENV_CONTRACT: '{{ wallet_plugin_contract }}'
@@ -23,3 +23,5 @@
       ENV_POSITION: '{{ wallet_plugin_env_coin_position }}'
       ENV_WAN_IP: '{{ wallet_plugin_env_coin_wan_ip }}'
       ENV_SYNC_INTERVAL: ''
+      ALL_PROXY: '{{ all_proxy }}'
+    etc_hosts: '{{ chain_plugin_proxy_hosts | default({}) }}'
