@@ -13,7 +13,7 @@ rust_bin_dir: '{{ lookup("env","HOME") }}/.cargo/bin'
 
 chain_mountpoint: /opt/chain
 
-# docker_image:uhub.service.ucloud.cn/entropypool/sphinx-plugin
+# chain_plugin_image:uhub.service.ucloud.cn/entropypool/sphinx-plugin
 # chain_plugin_version: 0.1.41
 
 swan_version: 2.0.0
