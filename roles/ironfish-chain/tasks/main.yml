@@ -1,0 +1,51 @@
+- name: Install node.js v18.x
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - >> {{ log_dir }}/nodejs-installer.log 2>&1'
+  run_once: true
+
+- name: Install nodejs
+  apt:
+    name: nodejs
+    state: present
+
+- name: Stop ironfish service
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: ironfish
+    state: stopped
+  ignore_errors: yes
+
+- name: Install ironfish
+  become: yes
+  become_user: root
+  become_method: sudo
+  npm:
+    name: ironfish
+    version: 'v0.1.70'
+    global: yes
+    state: present
+
+- name: Copy ironfish service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: ironfish.service.j2
+    dest: /etc/systemd/system/ironfish.service
+    owner: root
+    group: root
+
+- name: Start ironfish daemon
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: ironfish
+    enabled: yes
+

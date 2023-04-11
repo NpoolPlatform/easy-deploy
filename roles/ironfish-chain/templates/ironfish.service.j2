@@ -1,0 +1,13 @@
+[Unit]
+Description=Ironfish Client
+After=syslog.target network.target
+
+[Service]
+Restart=always
+RestartSec=10s
+ExecStart=sh -c 'node /usr/bin/ironfish start --datadir={{ ironfish_chain_dir }} >> {{ ironfish_chain_dir }}/ironfish.log'
+StandardOutput={{ ironfish_chain_dir }}/ironfish.log
+StandardError={{ ironfish_chain_dir }}/ironfish.log
+
+[Install]
+WantedBy=multi-user.target

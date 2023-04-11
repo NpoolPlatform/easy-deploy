@@ -1,0 +1,4 @@
+- hosts: ironfish-chain
+  roles:
+    - common
+    - ironfish-chain
