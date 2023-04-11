@@ -1,0 +1,4 @@
+- hosts: spacemesh-chain
+  roles:
+    - common
+    - spacemesh-plugin
