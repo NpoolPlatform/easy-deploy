@@ -4,20 +4,7 @@
   vars:
     container_name: aleo-plugin-{{ target_environment }}
     wallet_plugin_contract: ''
-    coin_net: '{{ target_environment }}'
     wallet_plugin_env_coin_type: aleo
     wallet_plugin_env_coin_local_api: 'http://{{ ansible_default_ipv4.address }}:3030'
     wallet_plugin_env_coin_public_api: ''
-    wallet_plugin_env_coin_position: sh-dev
-    wallet_plugin_env_coin_wan_ip: 172.16.31.179
-    chain_plugin_proxy: 'proxy.npool.top:80'
-    chain_plugin_proxy_hosts:
-      {
-        'proxy.npool.top': 172.16.31.131
-      }
-
     plugin_run: 'plugin run'
-    chain_plugin_image: uhub.service.ucloud.cn/entropypool_private/chain-transaction
-    chain_plugin_version: 'latest'
-    all_proxy: socks5://172.16.31.125:10808
-
