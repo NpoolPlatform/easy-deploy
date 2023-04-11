@@ -25,7 +25,7 @@
   become_method: sudo
   npm:
     name: ironfish
-    version: 'v0.1.70'
+    version: '{{ ironfish_chain_version }}'
     global: yes
     state: present
 
