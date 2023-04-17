@@ -7,7 +7,7 @@
     image: '{{ chain_plugin_image }}:{{ chain_plugin_version }}'
     log_driver: json-file
     log_options:
-      max-size: 50k
+      max-size: 100m
       max-file: 1
     state: started
     restart: yes
