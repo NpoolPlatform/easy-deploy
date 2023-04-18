@@ -13,7 +13,8 @@ rust_bin_dir: '{{ lookup("env","HOME") }}/.cargo/bin'
 
 chain_mountpoint: /opt/chain
 
-chain_plugin_version: 0.1.47
+# chain_plugin_version: 0.1.47
+chain_plugin_version: 0.1.3
 
 swan_version: 2.0.0
 # swan_provider_download_url: https://github.com/filswan/go-swan-provider/releases/download/v2.0.0/swan-provider-2.0.0-linux-amd64
@@ -55,7 +56,11 @@ chain_plugin_proxy_hosts:
     'proxy.npool.top': 172.16.31.131
   }
 
+# for aleo
 # chain_plugin_image: uhub.service.ucloud.cn/entropypool_private/chain-transaction
+# for spacemesh
 # chain_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p3
+# for ironfish
+chain_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p3
 all_proxy: ''
-token: ''
+token: 'ad4c9bf1234feb7dedc119bb93055c0e0fc4e29e36b3938fba4f4497bdbd2d43'

@@ -1,0 +1,21 @@
+- name: Clone snarkos source
+  git:
+    repo: 'https://github.com/AleoHQ/snarkOS.git'
+    dest: '{{ aleo_source_dir }}'
+    depth: 1
+    force: yes
+
+- name: Install dependencies 
+  ansible.builtin.apt:
+    pkg:
+    - build-essential
+    - curl
+    - clang
+    - gcc
+    - libssl-dev
+    - llvm
+    - make
+    - pkg-config
+    - tmux
+    - xz-utils
+    - ufw
