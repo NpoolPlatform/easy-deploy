@@ -1,2 +1,2 @@
 chain_plugin_proxy: 'proxy.procyon.vip:80'
-coin_net: main
+coin_net: test

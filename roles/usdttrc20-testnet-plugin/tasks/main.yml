@@ -5,7 +5,5 @@
     container_name: usdttrc20-plugin-{{ target_environment }}
     wallet_plugin_contract: 'TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj'
     wallet_plugin_env_coin_type: usdttrc20
-    wallet_plugin_env_coin_api: 'grpc.nile.trongrid.io:50051'
-    wallet_plugin_env_coin_token: ''
-    wallet_plugin_env_coin_user: ''
-    wallet_plugin_env_coin_pass: ''
+    wallet_plugin_env_coin_local_api: ''
+    wallet_plugin_env_coin_public_api: 'grpc.nile.trongrid.io:50051'

@@ -1,0 +1,4 @@
+- hosts: tron-chain
+  roles:
+    - common
+    - usdttrc20-testnet-plugin
