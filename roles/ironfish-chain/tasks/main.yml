@@ -103,6 +103,6 @@
   become_user: root
   become_method: sudo
   copy:
-    dest: '{{ vars_dir }}/ironfish_rpcauthtoken'
+    dest: '{{ vars_dir }}/{{ rpc_token_file }}.{{ ansible_default_ipv4.address }}'
     content: |
       {{ token.stdout }}

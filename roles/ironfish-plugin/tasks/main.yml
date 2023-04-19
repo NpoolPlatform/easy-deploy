@@ -1,5 +1,5 @@
 - name: Get rpcauthtoken
-  shell: 'cat {{ vars_dir }}/ironfish_rpcauthtoken'
+  shell: 'cat {{ vars_dir }}/{{ rpc_token_file }}.{{ ansible_default_ipv4.address }}'
   register: token
 
 - name: Deploy docker for ironfish plugin
