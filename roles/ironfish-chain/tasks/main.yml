@@ -29,6 +29,12 @@
     global: yes
     state: present
 
+- name: Create ironfish chain directory
+  ansible.builtin.file:
+    path: '{{ ironfish_chain_dir }}'
+    state: directory
+    mode: '0755'
+
 - name: Copy ironfish service file
   become: yes
   become_user: root
@@ -49,3 +55,28 @@
     name: ironfish
     enabled: yes
 
+- name: Copy ironfish config file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: config.json.j2
+    dest: '{{ ironfish_chain_dir }}/config.json'
+    owner: root
+    group: root
+
+- name: Restart ironfish daemon
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+      state: restarted
+      daemon_reload: yes
+      name: ironfish
+      enabled: yes
+
+- name: Get ironfish rpcauthtoken
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: "ironfish rpc:token --datadir={{ ironfish_chain_dir }} | awk '{print $4}' > {{ vars_dir }}/ironfish_rpcauthtoken"

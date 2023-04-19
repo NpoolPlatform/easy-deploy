@@ -33,6 +33,13 @@
   #     state: directory
   #     recurse: yes
 
+- name: Create vars directory
+  ansible.builtin.file:
+    path: '{{ vars_dir }}'
+    state: directory
+    recurse: yes
+  delegate_to: 127.0.0.1
+
 - name: Create host vars directory
   ansible.builtin.file:
     path: '{{ inventory_dir }}/host_vars'

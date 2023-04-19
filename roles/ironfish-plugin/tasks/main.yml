@@ -1,3 +1,7 @@
+- name: Get rpcauthtoken
+  shell: 'cat {{ vars_dir }}/ironfish_rpcauthtoken'
+  register: token
+
 - name: Deploy docker for ironfish plugin
   import_role:
     name: chain-plugin
@@ -5,6 +9,8 @@
     container_name: ironfish-plugin-{{ target_environment }}
     wallet_plugin_contract: ''
     wallet_plugin_env_coin_type: ironfish
-    wallet_plugin_env_coin_local_api: '{{ ansible_default_ipv4.address }}:8020|{{ token }}'
+    wallet_plugin_env_coin_local_api: '{{ ansible_default_ipv4.address }}:8020|{{ token.stdout }}'
     wallet_plugin_env_coin_public_api: ''
     plugin_run: 'run'
+    chain_plugin_image: '{{ ironfish_plugin_image }}'
+    chain_plugin_version: '{{ ironfish_plugin_version }}'

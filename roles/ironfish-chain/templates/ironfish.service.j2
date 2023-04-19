@@ -5,7 +5,7 @@ After=syslog.target network.target
 [Service]
 Restart=always
 RestartSec=10s
-ExecStart=sh -c 'node /usr/bin/ironfish start --datadir={{ ironfish_chain_dir }} >> {{ ironfish_chain_dir }}/ironfish.log'
+ExecStart=sh -c 'node /usr/bin/ironfish start --datadir={{ ironfish_chain_dir }} >> /var/log/ironfish.log'
 
 [Install]
 WantedBy=multi-user.target
