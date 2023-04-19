@@ -92,4 +92,17 @@
   become: yes
   become_user: root
   become_method: sudo
-  shell: "ironfish rpc:token --datadir={{ chain_mountpoint }}/ironfish/ | awk '{print $4}' > {{ vars_dir }}/ironfish_rpcauthtoken"
+  shell: "ironfish rpc:token --datadir={{ chain_mountpoint }}/ironfish | awk -F ': ' '{print $2}'"
+  register: token
+  until: token.stdout | trim | length > 0
+  retries: 10
+  delay: 5
+
+- name: Generate token file
+  become: yes
+  become_user: root
+  become_method: sudo
+  copy:
+    dest: '{{ vars_dir }}/ironfish_rpcauthtoken'
+    content: |
+      {{ token.stdout }}
