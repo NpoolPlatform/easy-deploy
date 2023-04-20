@@ -5,9 +5,10 @@ Description=Boostd service
 Environment=GOLOG_LOG_FMT="json"
 Environment=RUST_LOG=info
 Environment=GOLOG_FILE=/var/log/lotus/boostd.log
-Environment=BOOST_PATH=/opt/data
+Environment=BOOST_PATH={{ BOOST_PATH }}
 Environment=FULLNODE_API_INFO={{ FULLNODE_API_INFO }}
-ExecStart=/usr/local/bin/boostd -vv run
+ExecStartPre=-/bin/mkdir -p /var/log/boost {{ BOOST_PATH }}/deal-staging
+ExecStart=/bin/bash -c '/usr/local/bin/boostd -vv run > /var/log/boost/boostd.log 2>&1'
 Restart=always
 RestartSec=10
 Nice=-20

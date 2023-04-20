@@ -2,9 +2,10 @@
 Description=Swan Provier
 
 [Service]
-ExecStart=/usr/local/bin/swan-provider daemon
-StandardOutput=append:/var/log/swan/provider.output.log
-StandardError=append:/var/log/swan/provider.error.log
+Environment=GOLOG_LOG_LEVEL=debug
+Environment=SWAN_PATH={{ SWAN_PATH }}
+ExecStartPre=-/bin/mkdir -p /var/log/swan
+ExecStart=/bin/bash -c '/usr/local/bin/swan-provider daemon >> /var/log/swan/provider.log 2>&1'
 Restart=always
 RestartSec=10
 User=root

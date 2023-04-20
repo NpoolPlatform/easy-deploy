@@ -32,7 +32,7 @@
   become_user: root
   become_method: sudo
   ansible.builtin.file:
-    path: '/root/.swan/provider/'
+    path: '{{ SWAN_PATH }}/provider/'
     state: directory
     recurse: yes
 
@@ -42,7 +42,7 @@
   become_method: sudo
   template:
     src: config.toml.j2
-    dest: /root/.swan/provider/config.toml
+    dest: '{{ SWAN_PATH }}/provider/config.toml'
 
 - name: Create log directory
   become: yes

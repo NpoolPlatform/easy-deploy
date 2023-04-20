@@ -39,7 +39,7 @@
   become_user: root
   become_method: sudo
   stat:
-    path: '/opt/data/config.toml'
+    path: '{{ BOOST_PATH }}/config.toml'
   register: file_status
 
 - name: Init boostd repo
@@ -47,7 +47,7 @@
   become_user: root
   become_method: sudo
   shell:
-    cmd: 'bash {{ workspace }}/boostd-init.sh'
+    cmd: 'BOOST_PATH={{ BOOST_PATH }} FULLNODE_API_INFO={{ FULLNODE_API_INFO }} MINER_API_INFO={{ MINER_API_INFO }} boostd --vv init --api-sealer={{ APISEALER }} --api-sector-index={{ APISECTORINDEX }} --wallet-publish-storage-deals={{ PUBLISH_STORAGE_DEALS_WALLET }} --wallet-deal-collateral={{ COLLAT_WALLET }} --max-staging-deals-bytes=50000000000'
   when:
       file_status.stat.exists == False
 
@@ -65,7 +65,7 @@
   become_method: sudo
   template:
     src: config.toml.j2
-    dest: /opt/data/config.toml
+    dest: '{{ BOOST_PATH }}/config.toml'
 
 - name: Copy storage.json
   become: yes
@@ -73,7 +73,7 @@
   become_method: sudo
   template:
     src: storage.json.j2
-    dest: /opt/data/storage.json
+    dest: '{{ BOOST_PATH }}/storage.json'
 
 - name: Start boostd service
   become: yes

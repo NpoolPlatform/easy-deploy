@@ -6,6 +6,9 @@
   run_once: true
 
 - name: Install nodejs
+  become: yes
+  become_user: root
+  become_method: sudo
   apt:
     name: nodejs
     state: present

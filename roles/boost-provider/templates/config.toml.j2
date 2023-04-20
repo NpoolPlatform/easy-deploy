@@ -56,7 +56,7 @@ SectorIndexApiInfo = "{{ APISECTORINDEX }}"
   #
   # type: []string
   # env var: LOTUS_LIBP2P_ANNOUNCEADDRESSES
-  AnnounceAddresses = ["/ip4/{{ PUBLIC_IP }}/tcp/23456"]
+  AnnounceAddresses = ["/ip4/{{ PUBLIC_IP }}/tcp/{{ PUBLIC_PORT }}"]
 
   # Addresses to not announce
   # Format: multiaddress
