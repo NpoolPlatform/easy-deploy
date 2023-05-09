@@ -6,6 +6,8 @@ client_api_url="http://{{ LOTUS_IP }}:{{ LOTUS_PORT }}/rpc/v0"
 client_api_token="{{ SWAN_CLIENT_API_TOKEN }}"
 market_api_url="{{ SWAN_MARKET_API_URL }}"
 market_access_token="{{ MINER_ACCESS_TOKEN }}"
+max_sealing = 5
+max_addPiece = 2
 
 [aria2]
 aria2_candidate_dirs = [{{ ARIA2_CANDIDATE_DIRS }}]
