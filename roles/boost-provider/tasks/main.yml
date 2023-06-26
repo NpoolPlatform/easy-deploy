@@ -25,7 +25,7 @@
   become_method: sudo
   template:
     src: boostd-env.sh.j2
-    dest: '{{ workspace_env_dir }}/boostd-env.sh'
+    dest: '{{ workspace_env_dir }}/boostd-env-{{ MINERID }}.sh'
 
 - name: Install nfs
   become: yes
@@ -57,7 +57,7 @@
   become_method: sudo
   template:
     src: boostd.service.j2
-    dest: /etc/systemd/system/boostd.service
+    dest: /etc/systemd/system/boostd-{{ MINERID }}.service
 
 - name: Copy boostd config
   become: yes
@@ -82,5 +82,5 @@
   systemd:
     state: restarted
     daemon_reload: yes
-    name: boostd
+    name: boostd-{{ MINERID }}
     enabled: yes

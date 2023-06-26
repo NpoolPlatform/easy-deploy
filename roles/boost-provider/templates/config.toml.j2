@@ -22,7 +22,7 @@ SectorIndexApiInfo = "{{ APISECTORINDEX }}"
   #
   # type: string
   # env var: LOTUS_API_LISTENADDRESS
-  ListenAddress = "/ip4/0.0.0.0/tcp/1288/http"
+  ListenAddress = "/ip4/0.0.0.0/tcp/{{ LISTEN_PORT }}/http"
 
   # type: string
   # env var: LOTUS_API_REMOTELISTENADDRESS
@@ -48,7 +48,7 @@ SectorIndexApiInfo = "{{ APISECTORINDEX }}"
   #
   # type: []string
   # env var: LOTUS_LIBP2P_LISTENADDRESSES
-  ListenAddresses = ["/ip4/0.0.0.0/tcp/23456", "/ip6/::/tcp/23456"]
+  ListenAddresses = ["/ip4/0.0.0.0/tcp/{{ PUBLIC_PORT }}", "/ip6/::/tcp/{{ PUBLIC_PORT }}"]
 
   # Addresses to explicitally announce to other peers. If not specified,
   # all interface addresses are announced
@@ -297,7 +297,7 @@ SectorIndexApiInfo = "{{ APISECTORINDEX }}"
   #
   # type: uint64
   # env var: LOTUS_GRAPHQL_PORT
-  #Port = 8080
+  Port = {{ UI_PORT }}
 
 
 [LotusDealmaking]
