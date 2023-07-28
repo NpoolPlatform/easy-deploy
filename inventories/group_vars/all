@@ -16,8 +16,17 @@ chain_mountpoint: /opt/chain
 plugin_run: 'run'
 
 chain_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin
+spacemesh_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p2
+ironfish_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p3
+
 chain_plugin_version: 0.1.62
+spacemesh_plugin_version: 0.1.9
+ironfish_plugin_version: 0.1.20
 ironfish_chain_version: 'v1.3.0'
+
+all_proxy: ''
+chain_id: N/A
+chain_nickname: N/A
 
 swan_version: 2.2.0
 swan_provider_download_url: http://172.19.108.102:9999/fil-proofs-parameters/swan/swan-provider-2.2.0-linux-amd64
@@ -50,9 +59,3 @@ ALEO_HPOOL_DOWNLOAD_URL: 'http://172.19.108.102:9996/toollist/aleo/hpool-miner-a
 
 # for aleo
 # chain_plugin_image: uhub.service.ucloud.cn/entropypool_private/chain-transaction
-# for spacemesh
-# chain_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p2
-
-ironfish_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p3
-ironfish_plugin_version: 0.1.20
-all_proxy: ''
