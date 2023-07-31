@@ -1,0 +1,124 @@
+- name: Stop spacemesh mainnet service
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: spacemesh-mainnet
+    state: stopped
+  ignore_errors: yes
+
+- name: Create spacemesh user
+  become: yes
+  become_user: root
+  become_method: sudo
+  user:
+    name: spacemesh
+    state: present
+
+- name: Create chain directory
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '{{ chain_mountpoint }}/spacemesh'
+    state: directory
+    recurse: yes
+    owner: spacemesh
+    group: spacemesh
+
+- name: Copy spacemesh mainnet config file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: spacemesh-config.mainnet.json.j2
+    dest: '{{ chain_mountpoint }}/spacemesh/spacemesh-config.mainnet.json'
+    owner: root
+    group: root
+  when: "'{{ coin_net }}' == 'main' and '{{ coin_net_port }}' == '9092'"
+
+- name: Copy spacemesh service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: spacemesh-mainnet.service.j2
+    dest: /etc/systemd/system/spacemesh-mainnet.service
+    owner: root
+    group: root
+  when: "'{{ coin_net }}' == 'main' and '{{ coin_net_port }}' == '9092'"
+
+- name: Remove go-spacemesh
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '{{ spacemesh_source_dir }}'
+    state: absent
+
+- name: Clone go-spacemesh
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.git:
+    repo: 'https://github.com/spacemeshos/go-spacemesh.git'
+    dest: '{{ spacemesh_source_dir }}'
+    version: '{{ version }}'
+
+- name: Install ubuntu dependencies
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - gcc
+    - libssl-dev
+    - make
+    - curl
+  when:
+    - ansible_pkg_mgr == 'apt'
+
+- name: Run install target as root
+  become: yes
+  become_user: root
+  become_method: sudo
+  environment:
+    PATH: '{{ go_bin_dir }}:{{ ansible_env.PATH }}'
+  make:
+    chdir: '{{ spacemesh_source_dir }}'
+    target: build
+    params:
+      ALL_PROXY: '{{ all_proxy }}'
+  become: yes
+
+- name: Move go-spacemesh bin to target
+  become: yes
+  become_user: root
+  become_method: sudo
+  copy:
+    src: '{{ spacemesh_source_dir }}/build/go-spacemesh'
+    dest: /usr/local/bin/go-spacemesh
+    mode: preserve
+
+- name: Move libpost.so to target
+  become: yes
+  become_user: root
+  become_method: sudo
+  copy:
+    src: '{{ spacemesh_source_dir }}/build/libpost.so'
+    dest: /usr/lib/libpost.so
+    mode: preserve
+
+- name: Start spacemesh mainnet
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: spacemesh-mainnet
+    enabled: yes
+  when: "'{{ coin_net }}' == 'main' and '{{ coin_net_port }}' == '9092'"
+

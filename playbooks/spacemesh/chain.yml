@@ -1,0 +1,5 @@
+- hosts: spacemesh-chain
+  roles:
+    - common
+    - go-installer
+    - spacemesh-chain

@@ -1,0 +1,13 @@
+[Unit]
+Description=Spacemesh Main Client
+After=syslog.target network.target
+
+[Service]
+Restart=always
+RestartSec=10s
+ExecStartPre=-/bin/mkdir -p /var/log/spacemesh
+ExecStart=sh -c '/usr/local/bin/go-spacemesh --listen /ip4/0.0.0.0/tcp/7513 --config {{ chain_mountpoint }}/spacemesh/spacemesh-config.mainnet.json -d {{ chain_mountpoint }}/spacemesh/spacemesh_data >> /var/log/spacemesh/spacemesh.log'
+
+[Install]
+WantedBy=multi-user.target
+
