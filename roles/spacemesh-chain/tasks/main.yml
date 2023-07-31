@@ -7,6 +7,15 @@
     state: stopped
   ignore_errors: yes
 
+- name: Stop spacemesh testnet service
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: spacemesh-testnet
+    state: stopped
+  ignore_errors: yes
+
 - name: Create spacemesh user
   become: yes
   become_user: root
@@ -37,7 +46,7 @@
     group: root
   when: "'{{ coin_net }}' == 'main' and '{{ coin_net_port }}' == '9092'"
 
-- name: Copy spacemesh service file
+- name: Copy spacemesh mainnet service file
   become: yes
   become_user: root
   become_method: sudo
@@ -47,6 +56,24 @@
     owner: root
     group: root
   when: "'{{ coin_net }}' == 'main' and '{{ coin_net_port }}' == '9092'"
+
+- name: Date for genesis time
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'echo `date -d "2 hour ago" +"%Y-%m-%d"T"%T"`'
+  register: DATE
+
+- name: Copy spacemesh testnet service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: spacemesh-testnet.service.j2
+    dest: /etc/systemd/system/spacemesh-testnet.service
+    owner: root
+    group: root
+  when: "'{{ coin_net }}' == 'test' and '{{ coin_net_port }}' == '10092'"
 
 - name: Remove go-spacemesh
   become: yes
@@ -122,3 +149,22 @@
     enabled: yes
   when: "'{{ coin_net }}' == 'main' and '{{ coin_net_port }}' == '9092'"
 
+- name: Remove tmp spacemesh
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '/tmp/spacemesh'
+    state: absent
+  when: "'{{ coin_net }}' == 'test' and '{{ coin_net_port }}' == '10092'"
+
+- name: Start spacemesh testnet
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: spacemesh-testnet
+    enabled: yes
+  when: "'{{ coin_net }}' == 'test' and '{{ coin_net_port }}' == '10092'"
