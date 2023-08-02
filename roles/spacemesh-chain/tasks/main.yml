@@ -44,7 +44,7 @@
     dest: '{{ chain_mountpoint }}/spacemesh/spacemesh-config.mainnet.json'
     owner: root
     group: root
-  when: "'{{ coin_net }}' == 'main' and '{{ coin_net_port }}' == '9092'"
+  when: "'{{ coin_net }}' == 'main'"
 
 - name: Copy spacemesh mainnet service file
   become: yes
@@ -55,7 +55,7 @@
     dest: /etc/systemd/system/spacemesh-mainnet.service
     owner: root
     group: root
-  when: "'{{ coin_net }}' == 'main' and '{{ coin_net_port }}' == '9092'"
+  when: "'{{ coin_net }}' == 'main'"
 
 - name: Date for genesis time
   become: yes
@@ -73,7 +73,7 @@
     dest: /etc/systemd/system/spacemesh-testnet.service
     owner: root
     group: root
-  when: "'{{ coin_net }}' == 'test' and '{{ coin_net_port }}' == '10092'"
+  when: "'{{ coin_net }}' == 'test'"
 
 - name: Remove go-spacemesh
   become: yes
@@ -90,7 +90,7 @@
   ansible.builtin.git:
     repo: 'https://github.com/spacemeshos/go-spacemesh.git'
     dest: '{{ spacemesh_source_dir }}'
-    version: '{{ version }}'
+    version: '{{ go_spacemesh_version }}'
 
 - name: Install ubuntu dependencies
   become: yes
@@ -104,6 +104,8 @@
     - libssl-dev
     - make
     - curl
+    - unzip
+    - git-lfs
   when:
     - ansible_pkg_mgr == 'apt'
 
@@ -124,19 +126,13 @@
   become: yes
   become_user: root
   become_method: sudo
-  copy:
-    src: '{{ spacemesh_source_dir }}/build/go-spacemesh'
-    dest: /usr/local/bin/go-spacemesh
-    mode: preserve
+  shell: 'cp {{ spacemesh_source_dir }}/build/go-spacemesh /usr/local/bin/go-spacemesh'
 
 - name: Move libpost.so to target
   become: yes
   become_user: root
   become_method: sudo
-  copy:
-    src: '{{ spacemesh_source_dir }}/build/libpost.so'
-    dest: /usr/lib/libpost.so
-    mode: preserve
+  shell: 'mv {{ spacemesh_source_dir }}/build/libpost.so /usr/lib/libpost.so'
 
 - name: Start spacemesh mainnet
   become: yes
@@ -147,7 +143,7 @@
     daemon_reload: yes
     name: spacemesh-mainnet
     enabled: yes
-  when: "'{{ coin_net }}' == 'main' and '{{ coin_net_port }}' == '9092'"
+  when: "'{{ coin_net }}' == 'main'"
 
 - name: Remove tmp spacemesh
   become: yes
@@ -156,7 +152,7 @@
   ansible.builtin.file:
     path: '/tmp/spacemesh'
     state: absent
-  when: "'{{ coin_net }}' == 'test' and '{{ coin_net_port }}' == '10092'"
+  when: "'{{ coin_net }}' == 'test'"
 
 - name: Start spacemesh testnet
   become: yes
@@ -167,4 +163,4 @@
     daemon_reload: yes
     name: spacemesh-testnet
     enabled: yes
-  when: "'{{ coin_net }}' == 'test' and '{{ coin_net_port }}' == '10092'"
+  when: "'{{ coin_net }}' == 'test'"
