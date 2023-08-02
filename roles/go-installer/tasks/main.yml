@@ -17,23 +17,23 @@
   when: go_version_detect.failed
 
 - name: Build golang source
-  command: './all.bash >> {{ log_dir }}/go-installer.log'
-  args:
-    chdir: '{{ go_source_dir }}/src'
-  run_once: true
-  async: 3600
-  poll: 0
-  register: go_builder
+  shell: 'cd {{ go_source_dir }}/src;./all.bash'
+  #   args:
+  #     chdir: '{{ go_source_dir }}/src'
+  #   run_once: true
+  #   async: 3600
+  #   poll: 0
+  #   register: go_builder
   when: go_version_detect.failed
 
-- name: Check go build progress
-  async_status:
-    jid: '{{ go_builder.ansible_job_id }}'
-  register: go_builder_progress
-  until: go_builder_progress.finished
-  retries: 10000
-  delay: 5
-  when: go_version_detect.failed
+  # - name: Check go build progress
+  #   async_status:
+  #     jid: '{{ go_builder.ansible_job_id }}'
+  #   register: go_builder_progress
+  #   until: go_builder_progress.finished
+  #   retries: 10000
+  #   delay: 5
+  #  when: go_version_detect.failed
 
 - name: Create go bin directory
   file:
@@ -42,15 +42,9 @@
     recurse: yes
 
 - name: Move go bin to target
-  copy:
-    src: '{{ go_source_dir }}/bin/go'
-    dest: '{{ go_bin_dir }}/go'
-    mode: preserve
+  shell: 'mv {{ go_source_dir }}/bin/go {{ go_bin_dir }}/go'
   when: go_version_detect.failed
 
 - name: Move gofmt bin to target
-  copy:
-    src: '{{ go_source_dir }}/bin/gofmt'
-    dest: '{{ go_bin_dir }}/gofmt'
-    mode: preserve
+  shell: 'mv {{ go_source_dir }}/bin/gofmt {{ go_bin_dir }}/gofmt'
   when: go_version_detect.failed
