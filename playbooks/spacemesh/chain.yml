@@ -2,4 +2,4 @@
   roles:
     - common
     - go-installer
-    - spacemesh-testnet-chain
+    - spacemesh-mainnet-chain
