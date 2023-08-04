@@ -1,0 +1,4 @@
+- hosts: filecoin-chain
+  roles:
+    - common
+    - filecoin-mainnet-plugin

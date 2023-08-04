@@ -1,6 +1,6 @@
 - name: Detect golang version
   environment:
-    PATH: "{{ go_dir }}/bin:{{ lookup('env', 'PATH') }}"
+    PATH: "{{ go_bin_dir }}:{{ lookup('env', 'PATH') }}"
   shell: 'go version | grep {{ go_version }}'
   register: go_version_detect
   ignore_errors: true

@@ -8,7 +8,7 @@ go_version: 1.20.7
 go_spacemesh_version: v1.0.6
 ansible_python_interpreter: python3
 go_dir: '{{ lookup("env","HOME") }}/go'
-go_source_dir: '{{ go_dir }}/source'
+go_source_dir: '{{ go_dir }}'
 go_bin_dir: '{{ go_dir }}/bin'
 
 rust_bin_dir: '{{ lookup("env","HOME") }}/.cargo/bin'

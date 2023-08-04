@@ -1,0 +1,9 @@
+- name: Deploy docker for tron plugin
+  import_role:
+    name: chain-plugin
+  vars:
+    container_name: filecoin-plugin-{{ target_environment }}
+    wallet_plugin_contract: ''
+    wallet_plugin_env_coin_type: filecoin
+    wallet_plugin_env_coin_local_api: '{{ FULLNODE_API }}'
+    wallet_plugin_env_coin_public_api: ''

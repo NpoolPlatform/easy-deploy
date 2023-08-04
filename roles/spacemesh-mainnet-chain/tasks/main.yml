@@ -1,0 +1,131 @@
+- name: Detect spacemesh version
+  shell: 'go-spacemesh version | grep {{ go_spacemesh_version }}'
+  register: go_spacemesh_version_detect
+  ignore_errors: true
+
+- name: Stop spacemesh service
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: spacemesh
+    state: stopped
+  when: go_spacemesh_version_detect.failed
+  ignore_errors: yes
+
+- name: Create spacemesh user
+  become: yes
+  become_user: root
+  become_method: sudo
+  user:
+    name: spacemesh
+    state: present
+  when: go_spacemesh_version_detect.failed
+
+- name: Create chain directory
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '{{ chain_mountpoint }}/spacemesh'
+    state: directory
+    recurse: yes
+    owner: spacemesh
+    group: spacemesh
+  when: go_spacemesh_version_detect.failed
+
+- name: Copy spacemesh config file
+  become: yes
+  template:
+    src: spacemesh-config.mainnet.json.j2
+    dest: '{{ chain_mountpoint }}/spacemesh/spacemesh-config.mainnet.json'
+    owner: spacemesh
+    group: spacemesh
+  when: go_spacemesh_version_detect.failed
+
+- name: Copy spacemesh service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: spacemesh-mainnet.service.j2
+    dest: /etc/systemd/system/spacemesh.service
+    owner: spacemesh
+    group: spacemesh
+  when: go_spacemesh_version_detect.failed
+
+- name: Remove go-spacemesh source dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '{{ spacemesh_source_dir }}'
+    state: absent
+  when: go_spacemesh_version_detect.failed
+
+- name: Clone go-spacemesh dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.git:
+    repo: 'https://github.com/spacemeshos/go-spacemesh.git'
+    dest: '{{ spacemesh_source_dir }}'
+    version: '{{ go_spacemesh_version }}'
+  when: go_spacemesh_version_detect.failed
+
+- name: Install ubuntu dependencies
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - gcc
+    - libssl-dev
+    - make
+    - curl
+    - unzip
+    - git-lfs
+  when:
+    - ansible_pkg_mgr == 'apt'
+    - go_spacemesh_version_detect.failed
+
+- name: Run install target as root
+  become: yes
+  become_user: root
+  become_method: sudo
+  environment:
+    PATH: "{{ go_bin_dir }}:{{ lookup('env', 'PATH') }}"
+  make:
+    chdir: '{{ spacemesh_source_dir }}'
+    target: build
+    params:
+      ALL_PROXY: '{{ all_proxy }}'
+  become: yes
+  when: go_spacemesh_version_detect.failed
+
+- name: Move go-spacemesh bin to target
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'cp {{ spacemesh_source_dir }}/build/go-spacemesh /usr/local/bin/go-spacemesh'
+  when: go_spacemesh_version_detect.failed
+
+- name: Move libpost.so to target
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'cp {{ spacemesh_source_dir }}/build/libpost.so /usr/lib/libpost.so'
+  when: go_spacemesh_version_detect.failed
+
+- name: Start spacemesh service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: spacemesh
+    enabled: yes
+  when: go_spacemesh_version_detect.failed
