@@ -1,6 +1,6 @@
 - name: Detect golang version
   environment:
-    PATH: '{{ go_bin_dir }}:{{ ansible_env.PATH }}'
+    PATH: "{{ go_dir }}/bin:{{ lookup('env', 'PATH') }}"
   shell: 'go version | grep {{ go_version }}'
   register: go_version_detect
   ignore_errors: true
@@ -8,43 +8,16 @@
 - name: Print go detected version
   debug: var=go_version_detect.stdout_lines
 
-- name: Clone golang source
-  ansible.builtin.git:
-    repo: 'https://github.com/golang/go.git'
-    dest: '{{ go_source_dir }}'
-    version: 'go{{ go_version }}'
-    force: true
-  when: go_version_detect.failed
-
-- name: Build golang source
-  shell: 'cd {{ go_source_dir }}/src;./all.bash'
-  #   args:
-  #     chdir: '{{ go_source_dir }}/src'
-  #   run_once: true
-  #   async: 3600
-  #   poll: 0
-  #   register: go_builder
-  when: go_version_detect.failed
-
-  # - name: Check go build progress
-  #   async_status:
-  #     jid: '{{ go_builder.ansible_job_id }}'
-  #   register: go_builder_progress
-  #   until: go_builder_progress.finished
-  #   retries: 10000
-  #   delay: 5
-  #  when: go_version_detect.failed
-
-- name: Create go bin directory
+- name: Remove old go source dir
+  become: yes
   file:
-    path: '{{ go_bin_dir }}'
-    state: directory
-    recurse: yes
-
-- name: Move go bin to target
-  shell: 'mv {{ go_source_dir }}/bin/go {{ go_bin_dir }}/go'
+    path: '{{ go_source_dir }}/go'
+    state: absent
   when: go_version_detect.failed
 
-- name: Move gofmt bin to target
-  shell: 'mv {{ go_source_dir }}/bin/gofmt {{ go_bin_dir }}/gofmt'
+- name: Archive go tar.gz
+  unarchive:
+    src: 'https://dl.google.com/go/go{{ go_version }}.linux-amd64.tar.gz'
+    dest: '{{ go_source_dir }}'
+    remote_src: yes
   when: go_version_detect.failed
