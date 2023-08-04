@@ -87,6 +87,7 @@
     - curl
     - unzip
     - git-lfs
+    - ocl-icd-opencl-dev
   when:
     - ansible_pkg_mgr == 'apt'
     - go_spacemesh_version_detect.failed
