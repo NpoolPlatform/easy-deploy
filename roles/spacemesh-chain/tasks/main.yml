@@ -10,6 +10,7 @@
   ansible.builtin.systemd:
     name: spacemesh
     state: stopped
+  when: go_spacemesh_version_detect.failed
   ignore_errors: yes
 
 - name: Create spacemesh user
@@ -67,6 +68,7 @@
     - unzip
     - git-lfs
     - ocl-icd-opencl-dev
+    - libudev-dev
   when:
     - ansible_pkg_mgr == 'apt'
     - go_spacemesh_version_detect.failed
@@ -105,6 +107,7 @@
   become_method: sudo
   shell: 'echo `date -d "2 hour ago" +"%Y-%m-%d"T"%T"`'
   register: DATE
+  when: "'{{ coin_net }}' == 'test'"
 
 - name: Copy spacemesh service file
   become: yes
@@ -115,16 +118,42 @@
     dest: /etc/systemd/system/spacemesh.service
     owner: spacemesh
     group: spacemesh
+  when: "'{{ coin_net }}' == 'test'"
 
 - name: Remove tmp spacemesh
   become: yes
   become_user: root
   become_method: sudo
   ansible.builtin.file:
-    path: '/tmp/spacemesh'
-    state: absent
-  
-- name: Start spacemesh testnet
+          path: '/tmp/spacemesh'
+          state: absent
+  when: "'{{ coin_net }}' == 'test'"
+
+- name: Copy spacemesh config file
+  become: yes
+  template:
+    src: spacemesh-config.mainnet.json.j2
+    dest: '{{ chain_mountpoint }}/spacemesh/spacemesh-config.mainnet.json'
+    owner: spacemesh
+    group: spacemesh
+  when:
+    - go_spacemesh_version_detect.failed
+    - "'{{ coin_net }}' == 'main'"
+
+- name: Copy spacemesh service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: spacemesh-mainnet.service.j2
+    dest: /etc/systemd/system/spacemesh.service
+    owner: spacemesh
+    group: spacemesh
+  when:
+    - go_spacemesh_version_detect.failed
+    - "'{{ coin_net }}' == 'main'"
+
+- name: Start spacemesh service
   become: yes
   become_user: root
   become_method: sudo
