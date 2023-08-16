@@ -69,6 +69,8 @@
     - git-lfs
     - ocl-icd-opencl-dev
     - libudev-dev
+    - logrotate
+    - cron
   when:
     - ansible_pkg_mgr == 'apt'
     - go_spacemesh_version_detect.failed
@@ -162,3 +164,11 @@
     daemon_reload: yes
     name: spacemesh
     enabled: yes
+
+- name: Copy spacemesh logrotate file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: spacemesh-logrotate.conf.j2
+    dest: /etc/logrotate.d/spacemesh
