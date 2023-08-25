@@ -10,7 +10,6 @@
   ansible.builtin.systemd:
     name: spacemesh
     state: stopped
-  when: go_spacemesh_version_detect.failed
   ignore_errors: yes
 
 - name: Create spacemesh user
@@ -20,7 +19,6 @@
   user:
     name: spacemesh
     state: present
-  when: go_spacemesh_version_detect.failed
 
 - name: Create chain directory
   become: yes
@@ -32,7 +30,6 @@
     recurse: yes
     owner: spacemesh
     group: spacemesh
-  when: go_spacemesh_version_detect.failed
 
 - name: Remove go-spacemesh source dir
   become: yes
@@ -109,6 +106,8 @@
   become_method: sudo
   shell: 'echo `date -d "2 hour ago" +"%Y-%m-%d"T"%T"`'
   register: DATE
+  when:
+    - "'{{ coin_net }}' == 'test'"
 
 - name: Copy spacemesh service file
   become: yes
