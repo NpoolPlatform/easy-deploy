@@ -109,7 +109,6 @@
   become_method: sudo
   shell: 'echo `date -d "2 hour ago" +"%Y-%m-%d"T"%T"`'
   register: DATE
-  when: "'{{ coin_net }}' == 'test'"
 
 - name: Copy spacemesh service file
   become: yes
@@ -120,7 +119,8 @@
     dest: /etc/systemd/system/spacemesh.service
     owner: spacemesh
     group: spacemesh
-  when: "'{{ coin_net }}' == 'test'"
+  when:
+    - "'{{ coin_net }}' == 'test'"
 
 - name: Remove tmp spacemesh
   become: yes
@@ -139,7 +139,6 @@
     owner: spacemesh
     group: spacemesh
   when:
-    - go_spacemesh_version_detect.failed
     - "'{{ coin_net }}' == 'main'"
 
 - name: Copy spacemesh service file
@@ -152,7 +151,6 @@
     owner: spacemesh
     group: spacemesh
   when:
-    - go_spacemesh_version_detect.failed
     - "'{{ coin_net }}' == 'main'"
 
 - name: Start spacemesh service
