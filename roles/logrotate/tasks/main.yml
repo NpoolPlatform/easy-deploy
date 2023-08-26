@@ -1,0 +1,38 @@
+- name: Install ubuntu dependencies
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - logrotate
+    - cron
+
+- name: Copy logrotate service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: 'logrotate.service.j2'
+    dest: '/lib/systemd/system/logrotate.service'
+
+- name: Copy logrotate config file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: '{{ item }}-logrotate.conf.j2'
+    dest: '/etc/logrotate.d/{{ item }}'
+  with_items: '{{ logrotateitems }}'
+ 
+- name: Restart logrotate service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: logrotate
+    enabled: yes
+
