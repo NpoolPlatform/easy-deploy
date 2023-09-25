@@ -13,6 +13,32 @@
     name: nodejs
     state: present
 
+- name: Install n
+  become: yes
+  become_user: root
+  become_method: sudo
+  npm:
+    name: n
+    global: yes
+    state: present
+
+- name: Install node 18.17.1
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'n i 18.17.1'
+  run_once: true
+
+- name: Install npm 10.1.0
+  become: yes
+  become_user: root
+  become_method: sudo
+  npm:
+    name: npm
+    version: '10.1.0'
+    global: yes
+    state: present
+
 - name: Stop ironfish service
   become: yes
   become_user: root
