@@ -1,4 +1,7 @@
 - name: Get rpcauthtoken
+  become: yes
+  become_user: root
+  become_method: sudo
   shell: 'cat {{ vars_dir }}/{{ rpc_token_file }}.{{ ansible_default_ipv4.address }}'
   register: token
 
