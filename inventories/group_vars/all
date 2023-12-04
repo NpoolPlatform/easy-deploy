@@ -5,7 +5,7 @@ vars_dir: '{{ output_dir }}/vars'
 
 geth_version: 1.11.5
 go_version: 1.21.1
-go_spacemesh_version: v1.2.4
+go_spacemesh_version: v1.2.8
 ansible_python_interpreter: python3
 go_dir: '{{ lookup("env","HOME") }}/go'
 go_source_dir: '{{ go_dir }}'
@@ -20,9 +20,9 @@ chain_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin
 spacemesh_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p2
 ironfish_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p3
 
-chain_plugin_version: 0.1.66
-spacemesh_plugin_version: 0.1.14
-ironfish_plugin_version: 0.1.22
+chain_plugin_version: 0.1.68
+spacemesh_plugin_version: 0.1.18
+ironfish_plugin_version: 0.1.26
 ironfish_chain_version: 'v1.9.0'
 
 all_proxy: ''
