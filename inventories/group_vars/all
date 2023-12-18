@@ -5,7 +5,7 @@ vars_dir: '{{ output_dir }}/vars'
 
 geth_version: 1.11.5
 go_version: 1.21.1
-go_spacemesh_version: v1.2.8
+go_spacemesh_version: v1.2.11
 ansible_python_interpreter: python3
 go_dir: '{{ lookup("env","HOME") }}/go'
 go_source_dir: '{{ go_dir }}'
