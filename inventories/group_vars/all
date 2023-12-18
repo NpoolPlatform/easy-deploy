@@ -20,7 +20,7 @@ chain_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin
 spacemesh_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p2
 ironfish_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p3
 
-chain_plugin_version: 0.1.68
+chain_plugin_version: 0.1.78
 spacemesh_plugin_version: 0.1.18
 ironfish_plugin_version: 0.1.26
 ironfish_chain_version: 'v1.9.0'

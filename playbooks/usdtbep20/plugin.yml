@@ -1,0 +1,4 @@
+- hosts: usdtbep20-chain
+  roles:
+    - common
+    - usdtbep20-mainnet-plugin
