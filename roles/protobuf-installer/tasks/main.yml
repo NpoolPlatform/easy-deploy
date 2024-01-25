@@ -1,0 +1,42 @@
+- name: Detect protoc version
+  shell: 'protoc --version'
+  register: protoc_version_detect
+  ignore_errors: true
+
+- name: Print protoc detected version
+  debug: var=protoc_version_detect.stdout_lines
+
+- name: Install curl
+  apt:
+    name: curl
+    state: present
+
+- name: Download rust installer
+  get_url:
+    url: https://github.com/protocolbuffers/protobuf/releases/download/v3.18.1/protoc-3.18.1-linux-x86_64.zip
+    dest: '/tmp/protoc.zip'
+    mode: 0755
+    force: yes
+  when: protoc_version_detect.failed
+
+- name: Creates directory
+  file:
+    path: '/tmp/protoc'
+    state: directory
+  when: protoc_version_detect.failed
+
+- name: Unzip protoc release file
+  ansible.builtin.unarchive:
+    src: '/tmp/protoc.zip'
+    dest: '/tmp/protoc'
+    remote_src: yes
+  when: protoc_version_detect.failed
+
+- name: Copy protoc 
+  become: yes
+  ansible.builtin.copy:
+    src: '/tmp/protoc/bin/protoc'
+    dest: '/usr/bin/protoc'
+    mode: '0777'
+    remote_src: yes
+  when: protoc_version_detect.failed

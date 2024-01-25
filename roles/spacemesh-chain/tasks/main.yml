@@ -40,6 +40,24 @@
     state: absent
   when: go_spacemesh_version_detect.failed
 
+- name: Remove post-rs source dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '{{ spacemesh_post_source_dir }}'
+    state: absent
+  when: go_spacemesh_version_detect.failed
+
+- name: Clone post-rs dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.git:
+    repo: 'https://github.com/spacemeshos/post-rs.git'
+    dest: '{{ spacemesh_post_source_dir }}'
+  when: go_spacemesh_version_detect.failed
+
 - name: Clone go-spacemesh dir
   become: yes
   become_user: root
@@ -68,9 +86,75 @@
     - libudev-dev
     - logrotate
     - cron
+    - zip
   when:
     - ansible_pkg_mgr == 'apt'
     - go_spacemesh_version_detect.failed
+
+- name: Build post
+  become: yes
+  become_user: root
+  become_method: sudo
+  environment:
+    PATH: "{{ rust_bin_dir }}:{{ lookup('env', 'PATH') }}"
+  shell: "cd {{ spacemesh_post_source_dir }};echo 1.75.0 >rust-toolchain;cargo build -p post-cbindings --profile release-clib"
+  when: go_spacemesh_version_detect.failed
+
+- name: Build service
+  become: yes
+  become_user: root
+  become_method: sudo
+  environment:
+    PATH: "{{ rust_bin_dir }}:{{ lookup('env', 'PATH') }}"
+  shell: "cd {{ spacemesh_post_source_dir }};echo 1.75.0 >rust-toolchain;git submodule update --init --recursive;cargo build --release -p service"
+  when: go_spacemesh_version_detect.failed
+
+- name: Create build dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '{{ spacemesh_source_dir }}/build'
+    state: directory
+    recurse: yes
+  when: go_spacemesh_version_detect.failed
+
+- name: cp service to target
+  become: yes
+  become_user: root
+  become_method: sudo
+  copy:
+    src: '{{ spacemesh_post_source_dir }}/target/release/service'
+    dest: '{{ spacemesh_source_dir }}/build'
+    remote_src: yes
+  when: go_spacemesh_version_detect.failed
+
+- name: cp libpost.so to target
+  become: yes
+  become_user: root
+  become_method: sudo
+  copy:
+    src: '{{ spacemesh_post_source_dir }}/target/release-clib/libpost.so'
+    dest: '{{ spacemesh_source_dir }}/build'
+    remote_src: yes
+  when: go_spacemesh_version_detect.failed
+
+- name: cp post.h to target
+  become: yes
+  become_user: root
+  become_method: sudo
+  copy:
+    src: '{{ spacemesh_post_source_dir }}/ffi/post.h'
+    dest: '{{ spacemesh_source_dir }}/build'
+    remote_src: yes
+  when: go_spacemesh_version_detect.failed
+
+- name: zip libpost-linux-v0.6.4.zip
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'cd {{ spacemesh_source_dir }};cp build/post.h .;cp build/libpost.so .;zip libpost-linux-v0.6.4.zip post.h libpost.so'
+  when: go_spacemesh_version_detect.failed
 
 - name: Run install target as root
   become: yes
@@ -83,7 +167,6 @@
     target: build
     params:
       ALL_PROXY: '{{ all_proxy }}'
-  become: yes
   when: go_spacemesh_version_detect.failed
 
 - name: Move go-spacemesh bin to target
