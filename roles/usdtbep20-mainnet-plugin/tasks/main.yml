@@ -1,0 +1,9 @@
+- name: Deploy docker for usdtbep20 plugin
+  import_role:
+    name: chain-plugin
+  vars:
+    container_name: usdtbep20-plugin-{{ target_environment }}
+    wallet_plugin_contract: '0x55d398326f99059fF775485246999027B3197955'
+    wallet_plugin_env_coin_type: usdtbep20
+    wallet_plugin_env_coin_local_api: ''
+    wallet_plugin_env_coin_public_api: 'https://bsc-dataseed1.ninicoin.io,https://bsc-dataseed.binance.org,https://bsc-dataseed1.defibit.io,https://bsc.nodereal.io'

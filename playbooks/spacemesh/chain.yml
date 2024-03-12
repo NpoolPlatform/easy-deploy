@@ -2,4 +2,6 @@
   roles:
     - common
     - go-installer
+    - rust-installer
+    - protobuf-installer
     - spacemesh-chain

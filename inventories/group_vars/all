@@ -4,8 +4,9 @@ log_dir: '{{ output_dir }}/log'
 vars_dir: '{{ output_dir }}/vars'
 
 geth_version: 1.11.5
-go_version: 1.21.1
-go_spacemesh_version: v1.2.4
+go_version: 1.21.5
+go_spacemesh_version: v1.3.10
+spacemesh_post_version: v0.6.6
 ansible_python_interpreter: python3
 go_dir: '{{ lookup("env","HOME") }}/go'
 go_source_dir: '{{ go_dir }}'
@@ -20,9 +21,9 @@ chain_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin
 spacemesh_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p2
 ironfish_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p3
 
-chain_plugin_version: 0.1.66
-spacemesh_plugin_version: 0.1.14
-ironfish_plugin_version: 0.1.22
+chain_plugin_version: 0.1.78
+spacemesh_plugin_version: 0.1.18
+ironfish_plugin_version: 0.1.26
 ironfish_chain_version: 'v1.9.0'
 
 all_proxy: ''
@@ -43,6 +44,7 @@ prysm_sync_url: 'https://beaconstate.info'
 # Aleo
 workspace: /home/test/workspace
 spacemesh_source_dir: /home/test/workspace/spacemesh
+spacemesh_post_source_dir: /home/test/workspace/post-rs
 ALEO_GPU_DRIVER_VERSION: 515.43
 ALEO_GPU_DRIVER_DOWNLOAD_URL: http://172.19.108.102:9996/toollist/NVIDIA-Linux-x86_64-515.43.04.run
 ALEO_GPU_DRIVER: NVIDIA-Linux-x86_64-515.43.04.run

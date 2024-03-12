@@ -9,14 +9,12 @@
   debug: var=go_version_detect.stdout_lines
 
 - name: Remove old go source dir
-  become: yes
   file:
     path: '{{ lookup("env","HOME") }}/go'
     state: absent
   when: go_version_detect.failed
 
 - name: Archive go tar.gz
-  become: yes
   unarchive:
     src: 'https://dl.google.com/go/go{{ go_version }}.linux-amd64.tar.gz'
     dest: '{{ lookup("env","HOME") }}'
