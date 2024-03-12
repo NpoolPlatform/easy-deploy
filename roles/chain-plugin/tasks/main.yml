@@ -24,6 +24,7 @@
       ENV_WAN_IP: '{{ wallet_plugin_env_coin_wan_ip }}'
       ENV_SYNC_INTERVAL: ''
       ENV_CHAIN_ID: '{{ chain_id }}'
+      ENV_LOG_DIR: '{{ chain_log_dir }}'
       ENV_CHAIN_NICKNAME: '{{ chain_nickname }}'
       ALL_PROXY: '{{ all_proxy }}'
     etc_hosts: '{{ chain_plugin_proxy_hosts | default({}) }}'

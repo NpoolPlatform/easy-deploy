@@ -7,4 +7,5 @@
     wallet_plugin_env_coin_type: aleo
     wallet_plugin_env_coin_local_api: 'http://{{ ansible_default_ipv4.address }}:3030'
     wallet_plugin_env_coin_public_api: ''
-    plugin_run: 'plugin run'
+    chain_log_dir: '/var/log'
+    plugin_run: 'chain-transaction plugin run'
