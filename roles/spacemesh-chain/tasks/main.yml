@@ -96,18 +96,14 @@
   become: yes
   become_user: root
   become_method: sudo
-  environment:
-    PATH: "{{ rust_bin_dir }}:{{ lookup('env', 'PATH') }}"
-  shell: "cd {{ spacemesh_post_source_dir }};echo 1.75.0 >rust-toolchain;source ~/.cargo/env;cargo build -p post-cbindings --profile release-clib"
+  shell: "export PATH=$HOME/.cargo/bin:$PATH;cd {{ spacemesh_post_source_dir }};echo 1.75.0 >rust-toolchain;cargo build -p post-cbindings --profile release-clib"
   when: go_spacemesh_version_detect.failed
 
 - name: Build service
   become: yes
   become_user: root
   become_method: sudo
-  environment:
-    PATH: "{{ rust_bin_dir }}:{{ lookup('env', 'PATH') }}"
-  shell: "cd {{ spacemesh_post_source_dir }};echo 1.75.0 >rust-toolchain;git submodule update --init --recursive;cargo build --release -p service"
+  shell: "export PATH=$HOME/.cargo/bin:$PATH;cd {{ spacemesh_post_source_dir }};echo 1.75.0 >rust-toolchain;git submodule update --init --recursive;cargo build --release -p service"
   when: go_spacemesh_version_detect.failed
 
 - name: Create build dir
