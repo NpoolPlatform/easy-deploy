@@ -56,6 +56,7 @@
   ansible.builtin.git:
     repo: 'https://github.com/spacemeshos/post-rs.git'
     dest: '{{ spacemesh_post_source_dir }}'
+    version: '{{ spacemesh_post_version }}'
   when: go_spacemesh_version_detect.failed
 
 - name: Clone go-spacemesh dir
@@ -97,7 +98,7 @@
   become_method: sudo
   environment:
     PATH: "{{ rust_bin_dir }}:{{ lookup('env', 'PATH') }}"
-  shell: "cd {{ spacemesh_post_source_dir }};echo 1.75.0 >rust-toolchain;cargo build -p post-cbindings --profile release-clib"
+  shell: "cd {{ spacemesh_post_source_dir }};echo 1.75.0 >rust-toolchain;source ~/.cargo/env;cargo build -p post-cbindings --profile release-clib"
   when: go_spacemesh_version_detect.failed
 
 - name: Build service
@@ -153,7 +154,7 @@
   become: yes
   become_user: root
   become_method: sudo
-  shell: 'cd {{ spacemesh_source_dir }};cp build/post.h .;cp build/libpost.so .;zip libpost-linux-v0.6.4.zip post.h libpost.so'
+  shell: "cd {{ spacemesh_source_dir }};cp build/post.h .;cp build/libpost.so .;zip libpost-linux-{{ spacemesh_post_version }}.zip post.h libpost.so"
   when: go_spacemesh_version_detect.failed
 
 - name: Run install target as root
@@ -181,6 +182,13 @@
   become_user: root
   become_method: sudo
   shell: 'cp {{ spacemesh_source_dir }}/build/libpost.so /usr/lib/libpost.so'
+  when: go_spacemesh_version_detect.failed
+
+- name: Move service to target
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'cp {{ spacemesh_source_dir }}/build/service /usr/local/bin/service'
   when: go_spacemesh_version_detect.failed
 
 - name: Date for genesis time
