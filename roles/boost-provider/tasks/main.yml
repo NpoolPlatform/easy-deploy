@@ -51,6 +51,14 @@
   when:
       file_status.stat.exists == False
 
+- name: Copy boostd-data service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: boostd-data.service.j2
+    dest: /etc/systemd/system/boostd-data-{{ MINERID }}.service
+
 - name: Copy boostd service file
   become: yes
   become_user: root
@@ -74,6 +82,32 @@
   template:
     src: storage.json.j2
     dest: '{{ BOOST_PATH }}/storage.json'
+
+- name: Copy sectorstore.json
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: sectorstore.json.j2
+    dest: '{{ BOOST_PATH }}/sectorstore.json'
+
+- name: Copy boost to boost piece dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  copy:
+    src: '{{ BOOST_PATH }}/'
+    dest: '{{ BOOST_PIECE_REPO }}'
+    remote_src: yes
+
+- name: Start boostd data service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: boostd-data-{{ MINERID }}
 
 - name: Start boostd service
   become: yes
