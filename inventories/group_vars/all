@@ -66,5 +66,5 @@ ALEO_HPOOL_DOWNLOAD_URL: 'http://172.19.108.102:9996/toollist/aleo/hpool-miner-a
 
 # for filecoin
 lotus_version: 1.26.3.0
-lotus_download_url: http://172.19.108.102:9899/fil-release-internal/2004-amd-lotus-master-entropy-v1.26.3.0-c5fab8b793a5-avx2.tar.gz
+lotus_download_path: /home/test/download
 lotus_download_filename: 2004-amd-lotus-master-entropy-v1.26.3.0-c5fab8b793a5-avx2

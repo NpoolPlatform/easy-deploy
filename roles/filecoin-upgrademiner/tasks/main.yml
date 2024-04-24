@@ -12,18 +12,17 @@
     var:
       "check_lotus_version"
 
-- name: Archive lotus tar.gz
+- name: Copy lotus tar.gz
   unarchive:
-    src: '{{ lotus_download_url }}'
+    src: '{{ lotus_download_path }}/{{ lotus_download_filename }}.tar.gz'
     dest: '/tmp/'
-    remote_src: yes
   when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
 
 - name: Check deadline
   become: yes
   become_user: root
   become_method: sudo
-  shell: 'export LOTUS_STORAGE_PATH={{ LOTUS_STORAGE_PATH }};export FULLNODE_API_INFO={{ FULLNODE_API_INFO }};lotus-miner proving deadlines | grep current | grep "0 (0)"'
+  shell: 'export LOTUS_STORAGE_PATH={{ LOTUS_STORAGE_PATH }};export FULLNODE_API_INFO={{ FULLNODE_API_INFO }};lotus-miner proving deadlines | grep current | grep -w "0 (0)"'
   ignore_errors: yes
   register: check_deadline
   when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
@@ -34,13 +33,31 @@
       "check_deadline.rc"
   when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
 
+- name: Check submitted
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: "export LOTUS_STORAGE_PATH={{ LOTUS_STORAGE_PATH }};export FULLNODE_API_INFO={{ FULLNODE_API_INFO }};curdeadline=`lotus-miner proving deadlines | grep current | awk '{ print $1}'`;curtime=`date +%Y-%m-%d`;grep $curtime /var/log/lotus/miner.log | grep \"Submitted window post\" | grep \"deadline $curdeadline\""
+  ignore_errors: yes
+  register: check_submitted
+  until: check_submitted.rc == 0
+  retries: 10
+  delay: 30
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc != 0 and master == "true" and master is defined
+
+- name: Print check_submitted
+  debug:
+    var:
+      "check_submitted.rc"
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc != 0 and master == "true" and master is defined
+
 - name: Excute lotus-miner stop
   become: yes
   become_user: root
   become_method: sudo
   shell:
     cmd: 'export LOTUS_STORAGE_PATH={{ LOTUS_STORAGE_PATH }};export FULLNODE_API_INFO={{ FULLNODE_API_INFO }};lotus-miner stop'
-  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc == 0
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
 
 - name: Stop lotus miner
   become: yes
@@ -49,7 +66,7 @@
   systemd:
     state: stopped
     name: lotus-miner
-  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc == 0
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
  
 - name: Copy lotus-miner bin
   become: yes
@@ -59,7 +76,7 @@
     src: '/tmp/{{ lotus_download_filename }}/lotus-miner'
     dest: '/usr/local/bin/'
     remote_src: yes
-  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc == 0
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
 
 - name: Check MaximizeWindowPoStFeeCap
   become: yes
@@ -83,7 +100,7 @@
     daemon_reload: yes
     name: lotus-miner
     enabled: yes
-  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc == 0
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
 
 - name: Retry Check lotus miner version
   become: yes

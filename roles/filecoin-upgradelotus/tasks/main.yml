@@ -12,11 +12,10 @@
     var:
       "check_lotus_version"
 
-- name: Archive lotus tar.gz
+- name: Copy lotus tar.gz
   unarchive:
-    src: '{{ lotus_download_url }}'
+    src: '{{ lotus_download_path }}/{{ lotus_download_filename }}.tar.gz'
     dest: '/tmp/'
-    remote_src: yes
   when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
 
 - name: Stop lotus daemon
