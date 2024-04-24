@@ -1,0 +1,101 @@
+- name: Check lotus-miner version
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: 'export LOTUS_STORAGE_PATH={{ LOTUS_STORAGE_PATH }};export FULLNODE_API_INFO={{ FULLNODE_API_INFO }};lotus-miner version | grep {{ lotus_version }}'
+  ignore_errors: yes
+  register: check_lotus_version
+
+- name: Print check_lotus_version
+  debug:
+    var:
+      "check_lotus_version"
+
+- name: Archive lotus tar.gz
+  unarchive:
+    src: '{{ lotus_download_url }}'
+    dest: '/tmp/'
+    remote_src: yes
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
+
+- name: Check deadline
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'export LOTUS_STORAGE_PATH={{ LOTUS_STORAGE_PATH }};export FULLNODE_API_INFO={{ FULLNODE_API_INFO }};lotus-miner proving deadlines | grep current | grep "0 (0)"'
+  ignore_errors: yes
+  register: check_deadline
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
+
+- name: Print check_deadline
+  debug:
+    var:
+      "check_deadline.rc"
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
+
+- name: Excute lotus-miner stop
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: 'export LOTUS_STORAGE_PATH={{ LOTUS_STORAGE_PATH }};export FULLNODE_API_INFO={{ FULLNODE_API_INFO }};lotus-miner stop'
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc == 0
+
+- name: Stop lotus miner
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: stopped
+    name: lotus-miner
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc == 0
+ 
+- name: Copy lotus-miner bin
+  become: yes
+  become_user: root
+  become_method: sudo
+  copy:
+    src: '/tmp/{{ lotus_download_filename }}/lotus-miner'
+    dest: '/usr/local/bin/'
+    remote_src: yes
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc == 0
+
+- name: Check MaximizeWindowPoStFeeCap
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'grep MaximizeWindowPoStFeeCap /opt/data/lotusstorage/config.toml | grep false'
+  register: check_feecap
+  until: check_feecap.rc == 0
+
+- name: Print check MaximizeWindowPoStFeeCap
+  debug:
+    var:
+     "check_feecap.stdout"
+
+- name: Start lotus miner
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: lotus-miner
+    enabled: yes
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04" and check_deadline.rc == 0
+
+- name: Retry Check lotus miner version
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'export LOTUS_STORAGE_PATH={{ LOTUS_STORAGE_PATH }};export FULLNODE_API_INFO={{ FULLNODE_API_INFO }};lotus-miner version | grep Daemon'
+  register: check_miner_version
+  until: check_miner_version.rc == 0
+  retries: 10
+  delay: 30
+
+- name: Print check lotus miner state
+  debug:
+    var:
+     "check_miner_version.stdout"

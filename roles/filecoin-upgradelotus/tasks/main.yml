@@ -1,0 +1,87 @@
+- name: Check lotus version
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: 'lotus --repo=/opt/chain/lotus/ version | grep {{ lotus_version }}'
+  ignore_errors: yes
+  register: check_lotus_version
+
+- name: Print check_lotus_version
+  debug:
+    var:
+      "check_lotus_version"
+
+- name: Archive lotus tar.gz
+  unarchive:
+    src: '{{ lotus_download_url }}'
+    dest: '/tmp/'
+    remote_src: yes
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
+
+- name: Stop lotus daemon
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: 'lotus --repo=/opt/chain/lotus/ daemon stop;systemctl stop lotus-daemon'
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
+
+- name: Copy lotus bin
+  become: yes
+  become_user: root
+  become_method: sudo
+  copy:
+    src: '/tmp/{{ lotus_download_filename }}/lotus'
+    dest: '/usr/local/bin/'
+    remote_src: yes
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
+
+- name: Start lotus daemon
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: lotus-daemon
+    enabled: yes
+  when: check_lotus_version.rc !=0 and needupgrade == "true" and ansible_distribution_version == "20.04"
+
+- name: Retry Check lotus sync state
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'lotus --repo=/opt/chain/lotus/ sync wait'
+  register: check_lotus_sync_state
+  until: check_lotus_sync_state.rc == 0
+  retries: 5
+  delay: 5
+
+- name: Print check lotus sync state
+  debug:
+    var:
+      "check_lotus_sync_state.rc"
+
+- name: Check lotus version
+  shell:
+    cmd: 'lotus --repo=/opt/chain/lotus/ version | grep Daemon'
+  ignore_errors: yes
+  register: check_lotus_version
+
+- name: Print check_lotus_version
+  debug:
+    var:
+      "check_lotus_version.stdout"
+
+- name: Fetch fullnode API
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'lotus --repo=/opt/chain/lotus/ auth api-info --perm admin'
+  register: fullnode_api
+
+- name: Print fullnode API
+  debug:
+    var:
+      "fullnode_api.stdout"

@@ -1,0 +1,4 @@
+- hosts: fil-lotus
+  roles:
+    - common
+    - filecoin-upgradelotus

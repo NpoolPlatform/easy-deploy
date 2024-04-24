@@ -1,0 +1,4 @@
+- hosts: fil-miner
+  roles:
+    - common
+    - filecoin-upgrademiner
