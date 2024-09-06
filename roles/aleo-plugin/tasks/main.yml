@@ -1,3 +1,13 @@
+- name: Log into uhub.service.ucloud.cn registry
+  become: yes
+  become_user: root
+  become_method: sudo
+  docker_login:
+    registry_url: 'uhub.service.ucloud.cn'
+    username: '{{ uhub_registry_username }}'
+    password: '{{ uhub_registry_password }}'
+    reauthorize: true
+
 - name: Deploy docker for aleo plugin
   import_role:
     name: chain-plugin
@@ -9,3 +19,5 @@
     wallet_plugin_env_coin_public_api: ''
     chain_log_dir: '/var/log'
     plugin_run: 'chain-transaction plugin run'
+    chain_plugin_image: '{{ aleo_plugin_image }}'
+    chain_plugin_version: '{{ aleo_plugin_version }}'
