@@ -42,7 +42,7 @@ target_environment: '{{ lookup("env", "ENVIRONMENT") | default("production") }}'
 
 prysm_sync_url: 'https://beaconstate.info'
 
-# Aleo
+# spacemesh
 workspace: /home/test/workspace
 spacemesh_source_dir: /home/test/workspace/spacemesh
 spacemesh_post_source_dir: /home/test/workspace/post-rs
@@ -51,6 +51,8 @@ ALEO_GPU_DRIVER_DOWNLOAD_URL: http://172.19.108.102:9996/toollist/NVIDIA-Linux-x
 ALEO_GPU_DRIVER: NVIDIA-Linux-x86_64-515.43.04.run
 
 # snarkos aleo
+snarkos_source_dir: /home/test/workspace/snarkos
+snarkos_version: 'mainnet-staging'
 workspace_env_dir: /etc/profile.d/
 snarkos_download_url: http://172.19.108.102:9996/toollist/aleo/snarkos
 

@@ -14,6 +14,9 @@
     state: present
 
 - name: Download rust installer
+  become: yes
+  become_user: root
+  become_method: sudo
   get_url:
     url: https://sh.rustup.rs
     dest: '{{ output_dir }}/sh.rustup.rs'

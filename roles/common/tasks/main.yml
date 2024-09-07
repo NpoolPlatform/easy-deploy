@@ -14,11 +14,11 @@
     recurse: yes
   delegate_to: 127.0.0.1
 
-  # - name: Create output directory
-  #   ansible.builtin.file:
-  #     path: '{{ output_dir }}'
-  #     state: directory
-  #     recurse: yes
+- name: Create output directory
+  ansible.builtin.file:
+    path: '{{ output_dir }}'
+    state: directory
+    recurse: yes
 
 - name: Create log directory
   ansible.builtin.file:
@@ -27,11 +27,11 @@
     recurse: yes
   delegate_to: 127.0.0.1
 
-  # - name: Create log directory
-  #   ansible.builtin.file:
-  #     path: '{{ log_dir }}'
-  #     state: directory
-  #     recurse: yes
+- name: Create log directory
+  ansible.builtin.file:
+    path: '{{ log_dir }}'
+    state: directory
+    recurse: yes
 
 - name: Create vars directory
   ansible.builtin.file:

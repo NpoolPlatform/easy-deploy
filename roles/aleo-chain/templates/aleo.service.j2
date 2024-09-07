@@ -1,0 +1,13 @@
+[Unit]
+Description=Aleo snarkos
+
+[Service]
+ExecStartPre=-/bin/mkdir -p /var/log/aleo
+ExecStart=sh -c '/usr/local/bin/snarkos start --client --nocdn --nodisplay --private-key {{ PRIVATE_KEY }} --storage {{ chain_mountpoint }}/aleo >> /var/log/aleo/aleo.log'
+Restart=always
+RestartSec=10
+Delegate=yes
+User=root
+
+[Install]
+WantedBy=multi-user.target

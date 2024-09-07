@@ -1,13 +1,13 @@
-- name: Clone snarkos source
-  git:
-    repo: 'https://github.com/AleoHQ/snarkOS.git'
-    dest: '{{ aleo_source_dir }}'
-    depth: 1
-    force: yes
+# - name: Detect aleo version
 
-- name: Install dependencies 
-  ansible.builtin.apt:
-    pkg:
+- name: Install ubuntu dependencies
+  become: yes
+  become_user: root
+  become_method: sudo
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
     - build-essential
     - curl
     - clang
@@ -19,3 +19,91 @@
     - tmux
     - xz-utils
     - ufw
+  when:
+    - ansible_pkg_mgr == 'apt'
+
+- name: Disable ufw
+  become: yes
+  become_user: root
+  become_method: sudo
+  community.general.ufw:
+    state: disabled
+  when:
+    - ansible_pkg_mgr == 'apt'
+
+- name: Allow port 4133 and 3033
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.posix.firewalld:
+    port: '{{ item }}'
+    permanent: yes
+    state: enabled
+  with_items:
+    - 4133/tcp
+    - 3033/tcp
+  when:
+    - ansible_pkg_mgr == 'yum'
+
+- name: reload service firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
+  when:
+    - ansible_pkg_mgr == 'yum'
+
+- name: Remove snarkos source dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.file:
+    path: '{{ snarkos_source_dir }}'
+    state: absent
+
+- name: Clone snarkos dir
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.git:
+    repo: 'https://github.com/AleoNet/snarkOS.git'
+    dest: '{{ snarkos_source_dir }}'
+    version: '{{ snarkos_version }}'
+
+- name: Build snarkos
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: "export PATH=$HOME/.cargo/bin:$PATH;cd {{ snarkos_source_dir }};cargo install --locked --path ."
+
+- name: Stop aleo service
+  become: yes
+  become_user: root
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: aleo
+    state: stopped
+  ignore_errors: yes
+
+- name: Copy aleo service file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: aleo.service.j2
+    dest: /etc/systemd/system/aleo.service
+
+- name: Copy snarkos to target
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'cp {{ snarkos_source_dir }}/target/release/snarkos /usr/local/bin/snarkos'
+
+- name: Start aleo service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+      state: restarted
+      daemon_reload: yes
+      name: aleo
+      enabled: yes
