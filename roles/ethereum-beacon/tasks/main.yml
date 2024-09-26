@@ -4,7 +4,7 @@
   become_method: sudo
   docker_container:
     name: 'beacon-node'
-    image: 'gcr.io/prysmaticlabs/prysm/beacon-chain:stable@sha256:37ff590b82dba14e813b30f1f1e747d23e8d8e221bda9a671e4d88b3db525d76'
+    image: 'gcr.io/prysmaticlabs/prysm/beacon-chain:stable@sha256:b175f21339c6d9e3957f9add9ebc5f1d4edbcc8cfd9a84d80550fce1a5819b54'
     state: started
     restart: yes
     restart_policy: always

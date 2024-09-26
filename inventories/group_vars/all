@@ -3,7 +3,7 @@ source_dir: '{{ lookup("env","HOME") }}/.easy.deploy.source'
 log_dir: '{{ output_dir }}/log'
 vars_dir: '{{ output_dir }}/vars'
 
-geth_version: 1.11.5
+geth_version: 1.14.9
 go_version: 1.21.5
 go_spacemesh_version: v1.3.10
 spacemesh_post_version: v0.6.6
