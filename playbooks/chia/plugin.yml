@@ -1,0 +1,4 @@
+- hosts: chia-chain
+  roles:
+    - common
+    - chia-plugin
