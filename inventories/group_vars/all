@@ -20,16 +20,16 @@ plugin_run: 'run'
 chain_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin
 spacemesh_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p2
 ironfish_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p3
+chia_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p2
 
 chain_plugin_version: 0.1.78
 spacemesh_plugin_version: 0.1.18
 ironfish_plugin_version: 0.1.26
 ironfish_chain_version: 'v2.1.0'
-aleo_plugin_version: 0.1.28
+aleo_plugin_version: 0.1.30
+chia_plugin_version: 0.1.22
 
 all_proxy: ''
-chain_id: N/A
-chain_nickname: N/A
 
 swan_version: 2.2.0
 swan_provider_download_url: http://172.19.108.102:9999/fil-proofs-parameters/swan/swan-provider-2.2.0-linux-amd64

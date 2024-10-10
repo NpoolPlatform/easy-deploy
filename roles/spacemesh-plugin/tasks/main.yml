@@ -5,7 +5,7 @@
     container_name: spacemesh-plugin-{{ target_environment }}
     wallet_plugin_contract: ''
     wallet_plugin_env_coin_type: spacemesh
-    wallet_plugin_env_coin_local_api: '{{ ansible_default_ipv4.address }}:{{ coin_net_port }}'
+    wallet_plugin_env_coin_local_api: '{{ ansible_default_ipv4.address }}:{{ smh_coin_net_port }}'
     wallet_plugin_env_coin_public_api: ''
     plugin_run: 'run'
     chain_plugin_image: '{{ spacemesh_plugin_image }}'
