@@ -5,5 +5,7 @@
     container_name: usdterc20-plugin-{{ target_environment }}
     wallet_plugin_contract: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     wallet_plugin_env_coin_type: usdterc20
-    wallet_plugin_env_coin_local_api: 'http://{{ ansible_default_ipv4.address }}:8545'
+    wallet_plugin_env_coin_local_api: '{{ eth_api | default("http://{{ ansible_default_ipv4.address }}:8545") }}'
     wallet_plugin_env_coin_public_api: ''
+    chain_id: '{{ eth_chain_id | default("") }}'
+    chain_nickname: '{{ eth_chain_nickname | default("") }}'

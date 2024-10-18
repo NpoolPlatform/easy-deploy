@@ -3,6 +3,7 @@ Description=Aleo snarkos
 
 [Service]
 ExecStartPre=-/bin/mkdir -p /var/log/aleo
+LimitNOFILE=infinity
 ExecStart=sh -c '/usr/local/bin/snarkos start --client --nocdn --nodisplay --private-key {{ PRIVATE_KEY }} --storage {{ chain_mountpoint }}/aleo >> /var/log/aleo/aleo.log'
 Restart=always
 RestartSec=10
