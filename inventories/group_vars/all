@@ -23,7 +23,7 @@ ironfish_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p3
 chia_plugin_image: uhub.service.ucloud.cn/entropypool/sphinx-plugin-p2
 
 chain_plugin_version: 0.1.98
-spacemesh_plugin_version: 0.1.18
+spacemesh_plugin_version: 0.1.22
 ironfish_plugin_version: 0.1.26
 ironfish_chain_version: 'v2.1.0'
 aleo_plugin_version: 0.1.30

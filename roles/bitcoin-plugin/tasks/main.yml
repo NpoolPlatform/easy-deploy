@@ -7,3 +7,5 @@
     wallet_plugin_env_coin_type: bitcoin
     wallet_plugin_env_coin_local_api: '{{ ansible_default_ipv4.address }}:8332|{{ bitcoin_rpcuser }}@{{ bitcoin_rpcpassword }}'
     wallet_plugin_env_coin_public_api: ''
+    chain_id: '{{ bitcoin_chain_id | default("") }}'
+    chain_nickname: '{{ bitcoin_chain_nickname | default("") }}'

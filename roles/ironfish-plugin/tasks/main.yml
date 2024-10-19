@@ -17,3 +17,5 @@
     plugin_run: 'run'
     chain_plugin_image: '{{ ironfish_plugin_image }}'
     chain_plugin_version: '{{ ironfish_plugin_version }}'
+    chain_id: '{{ ironfish_chain_id | default("") }}'
+    chain_nickname: '{{ ironfish_chain_nickname | default("") }}'

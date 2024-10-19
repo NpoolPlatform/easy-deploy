@@ -21,3 +21,5 @@
     plugin_run: 'chain-transaction plugin run'
     chain_plugin_image: '{{ aleo_plugin_image }}'
     chain_plugin_version: '{{ aleo_plugin_version }}'
+    chain_id: '{{ aleo_chain_id | default("") }}'
+    chain_nickname: '{{ aleo_chain_nickname | default("") }}'

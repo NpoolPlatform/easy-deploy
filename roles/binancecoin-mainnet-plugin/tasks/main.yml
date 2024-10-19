@@ -7,3 +7,5 @@
     wallet_plugin_env_coin_type: binancecoin
     wallet_plugin_env_coin_local_api: ''
     wallet_plugin_env_coin_public_api: 'https://bsc-dataseed1.ninicoin.io,https://bsc-dataseed.binance.org,https://bsc-dataseed1.defibit.io,https://bsc.nodereal.io'
+    chain_id: '{{ binancecoin_chain_id | default("") }}'
+    chain_nickname: '{{ binancecoin_chain_nickname | default("") }}'
