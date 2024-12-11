@@ -1,3 +1,14 @@
+- name: Check system version
+  shell:
+    cmd: 'cat /etc/issue'
+  ignore_errors: yes
+  register: system_version
+
+- name: Print system version
+  debug:
+    var:
+      "system_version.stdout"
+
 - name: Check GPU exists
   shell:
     cmd: 'nvidia-smi -L'
