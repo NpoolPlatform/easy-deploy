@@ -20,8 +20,8 @@
   become_user: root
   become_method: sudo
   template:
-    src: '/home/test/download/testfile'
-    dest: '/home/cuda_12.4.0_550.54.14_linux.run'
+    src: '{{ download_dir }}/cuda_12.4.0_550.54.14_linux.run'
+    dest: '{{ home_dir }}/cuda_12.4.0_550.54.14_linux.run'
   when: check_gpu_exists.rc !=0
   ignore_errors: yes
 
@@ -30,7 +30,7 @@
   become_user: root
   become_method: sudo
   shell:
-    cmd: '/home/cuda_12.4.0_550.54.14_linux.run --silent'
+    cmd: '{{ home_dir }}/cuda_12.4.0_550.54.14_linux.run --silent'
   when: check_gpu_exists.rc !=0
   ignore_errors: yes
 
@@ -42,7 +42,7 @@
 
 - name: Copy hashcat tar.gz
   unarchive:
-    src: '/home/test/download/hashcat.tar.gz'
+    src: '{{ download_dir }}/hashcat.tar.gz'
     dest: '/tmp/'
 
 - name: Build hashcat
