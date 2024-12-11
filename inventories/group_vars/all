@@ -26,7 +26,7 @@ chain_plugin_version: 0.1.98
 spacemesh_plugin_version: 0.1.22
 ironfish_plugin_version: 0.1.26
 ironfish_chain_version: 'v2.1.0'
-aleo_plugin_version: 0.1.30
+aleo_plugin_version: 0.1.32
 chia_plugin_version: 0.1.22
 
 all_proxy: ''
@@ -52,7 +52,7 @@ ALEO_GPU_DRIVER: NVIDIA-Linux-x86_64-515.43.04.run
 
 # snarkos aleo
 snarkos_source_dir: /home/test/workspace/snarkos
-snarkos_version: 'mainnet-staging'
+snarkos_version: 'v3.1.0'
 workspace_env_dir: /etc/profile.d/
 snarkos_download_url: http://172.19.108.102:9996/toollist/aleo/snarkos
 

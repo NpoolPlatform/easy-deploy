@@ -1,0 +1,148 @@
+#!/bin/bash
+
+options="r:p:w:"
+BASE_PORT=9082
+
+while getopts $options opt; do
+  case ${opt} in
+    r) ROLE=${OPTARG} ;;
+    p) BASE_PORT=${OPTARG} ;;
+    w) WHITE_LIST=${OPTARG} ;;
+  esac
+done
+
+pip install s3cmd
+s3cmd_version=`s3cmd --version`
+echo $s3cmd_version | grep "2.4.0" > /dev/null 2>&1
+if [ ! 0 -eq $? ]; then
+  wget https://github.com/s3tools/s3cmd/releases/download/v2.4.0/s3cmd-2.4.0.tar.gz
+  tar xvf s3cmd-2.4.0.tar.gz
+  cd s3cmd-2.4.0
+  pip install -e .
+  cp s3cmd /usr/bin/s3cmd
+fi
+
+S3_CFG=$HOME/.s3cfg
+S3_CFG_TMP=$HOME/.s3cfg.tmp
+
+echo "[default]" > $S3_CFG_TMP
+echo "access_key = {{ ACCESS_KEY }}" >> $S3_CFG_TMP
+echo "secret_key = {{ SECRET_KEY }}" >> $S3_CFG_TMP
+echo "host_base = {{ HOST_BASE }}" >> $S3_CFG_TMP
+echo "host_bucket = {{ HOST_BUCKET }}" >> $S3_CFG_TMP
+echo "bucket_location = hk" >> $S3_CFG_TMP
+echo "signature_v2 = False" >> $S3_CFG_TMP
+echo "use_https = False" >> $S3_CFG_TMP
+echo "multipart_chunk_size_mb = 32" >> $S3_CFG_TMP
+
+[ ! -f $S3_CFG ] && cp $S3_CFG_TMP $S3_CFG
+diff $S3_CFG_TMP $S3_CFG
+[ ! 0 -eq $? ] && cp $S3_CFG_TMP $S3_CFG && rm $S3_CFG_TMP
+
+WORKER_BUCKET_NAME=s3://{{ WORKER_BUCKET_NAME }}
+MINER_BUCKET_NAME=s3://{{ MINER_BUCKET_NAME }}
+s3cmd ls | grep $WORKER_BUCKET_NAME
+if [ ! $? -eq 0 ]; then
+  s3cmd mb $WORKER_BUCKET_NAME
+fi
+if [ ! $? -eq 0 ]; then
+  exit 1
+fi
+
+THREAD_PER_CORE=`lscpu | grep "Thread(s) per core" | awk -F ':' '{print $2}' | sed 's/ //g'`
+CPUS=`lscpu | grep "CPU(s):" | grep -v NUMA | awk -F ':' '{print $2}' | sed 's/ //g'`
+GPUS=`nvidia-smi -L | grep "L40S\|4090" | wc -l`
+
+
+function cpu_range() {
+  [ $GPUS -eq 1 ] && echo "0-`expr $CPUS - 1`" && return
+  index=`expr $1 - 1`
+  cpu_batch=`expr $CPUS / $THREAD_PER_CORE / $GPUS`
+  cpu_bonus=0
+  if [ $index -ge `expr $GPUS / 2` -a $THREAD_PER_CORE -gt 1 ]; then
+    cpu_bonus=`expr $CPUS / 4`
+  fi
+  start_cpu=`expr $index \* $cpu_batch + $cpu_bonus`
+  end_cpu=`expr $index \* $cpu_batch + $cpu_batch + $cpu_bonus - 1`
+  echo $start_cpu-$end_cpu
+}
+
+function run_worker() {
+  service_name=worker-$1.service
+  worker_log_dir=/var/log/hashcat-$1.log
+  service_port=$2
+  acquire_port=$3
+  _cpu_range=`cpu_range $1`
+  gpu_index=`expr $1 - 1`
+
+  echo "[Unit]" > /etc/systemd/system/$service_name
+  echo "Description=hashcat service" >> /etc/systemd/system/$service_name
+  echo "After=syslog.target network.target" >> /etc/systemd/system/$service_name
+  echo "" >> /etc/systemd/system/$service_name
+  echo "[Service]" >> /etc/systemd/system/$service_name
+  echo "Restart=always" >> /etc/systemd/system/$service_name
+  echo "RestartSec=10s" >> /etc/systemd/system/$service_name
+  echo "ExecStartPre=/bin/sleep 10" >> /etc/systemd/system/$service_name
+  echo "ExecStartPre=-/bin/mkdir -p /opt/dlami/nvme/omg/logs/" >> /etc/systemd/system/$service_name
+  echo "Environment=CUDA_VISIBLE_DEVICES=$gpu_index" >> /etc/systemd/system/$service_name
+  echo "ExecStart=sh -c 'taskset -c $_cpu_range /usr/local/bin/hashcat -R -P $service_port -Q $acquire_port -A -7 0.0.0.0 >> $worker_log_dir 2>&1'" >> /etc/systemd/system/$service_name
+  echo "" >> /etc/systemd/system/$service_name
+  echo "[Install]" >> /etc/systemd/system/$service_name
+  echo "WantedBy=multi-user.target" >> /etc/systemd/system/$service_name
+
+  systemctl daemon-reload
+  systemctl enable worker-$1
+  systemctl restart worker-$1
+}
+
+for worker in `ls /etc/systemd/system/worker-*.service`; do
+  systemctl stop `basename $worker`
+  systemctl disable `basename $worker`
+  rm -rf $worker
+done
+
+for i in `seq 1 $GPUS`; do
+  service_port=`expr $BASE_PORT + 4 \* \( $i - 1 \)`
+  acquire_port=`expr $BASE_PORT + 4 \* \( $i - 1 \) + 2`
+  run_worker $i $service_port $acquire_port
+done
+
+while true; do
+  # wan_ip=`hostname -i | awk '{ print $1 }'`
+  needcurl="true"
+  if [ -f worker_report_ip ];then
+    worker_report_ip=`cat worker_report_ip`
+    for report_file in /tmp/${worker_report_ip}*
+    do
+      [ -f $report_file ] && wan_ip=$worker_report_ip && needcurl="false"
+    done
+  fi
+  if [ "$needcurl" == "true" ];then
+    wan_ip=`curl -sSL https://ipinfo.io | grep "\"ip\"" | awk '{print $2}' | sed 's/[",]//g'`
+    [ x"$wan_ip" == "x" ] && echo "Failed to query wan IP" && sleep 60 && continue
+    echo $wan_ip > worker_report_ip
+  fi
+
+  for i in `seq 1 $GPUS`; do
+    [ "x$ROLE" == "xminer" -a $i -eq 1 ] && continue
+    service_port=`expr $BASE_PORT + 4 \* \( $i - 1 \)`
+    acquire_port=`expr $BASE_PORT + 4 \* \( $i - 1 \) + 2`
+    date +%s > /tmp/$wan_ip:$service_port:$acquire_port
+    s3cmd put /tmp/$wan_ip:$service_port:$acquire_port $WORKER_BUCKET_NAME
+  done
+
+  s3cmd ls $MINER_BUCKET_NAME | awk -F '/' '{print $4}' > /tmp/compute-miners
+  if [ x"$ROLE" == x"miner" ]; then
+    echo "127.0.0.1" >> /tmp/compute-miners
+  fi
+
+  if [ x"$WHITE_LIST" != x ]; then
+    for ip in $WHITE_LIST;
+    do
+      echo $ip >> /tmp/compute-miners
+    done
+  fi
+
+  sleep 60
+
+done

@@ -1,0 +1,13 @@
+[Unit]
+Description=launch worker service
+After=syslog.target network.target
+
+[Service]
+Restart=always
+RestartSec=10s
+Environment=HOME=/root
+WorkingDirectory=/home
+ExecStart=sh -c '/usr/local/bin/launch-workers -r {{ ROLE }} -p {{ BASE_PORT }} -w "{{ WHITE_LIST }}" >> /var/log/launch-worker.log 2>&1'
+
+[Install]
+WantedBy=multi-user.target

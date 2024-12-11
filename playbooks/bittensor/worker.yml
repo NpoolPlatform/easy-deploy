@@ -1,0 +1,4 @@
+- hosts: bittensor
+  roles:
+    - common
+    - bittensor

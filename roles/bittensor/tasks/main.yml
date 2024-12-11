@@ -1,0 +1,69 @@
+- name: Check GPU exists
+  shell:
+    cmd: 'nvidia-smi -L'
+  ignore_errors: yes
+  register: check_gpu_exists
+
+- name: Download GPU
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: '/home/test/download/testfile'
+    dest: '/home/cuda_12.4.0_550.54.14_linux.run'
+  when: check_gpu_exists.rc !=0
+  ignore_errors: yes
+
+- name: Install GPU
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell:
+    cmd: '/home/cuda_12.4.0_550.54.14_linux.run --silent'
+  when: check_gpu_exists.rc !=0
+  ignore_errors: yes
+
+- name: Remove hashcat source dir
+  ansible.builtin.file:
+    path: '/tmp/hashcat'
+    state: absent
+  when: need_build == "true"
+
+- name: Copy hashcat tar.gz
+  unarchive:
+    src: '/home/test/download/hashcat.tar.gz'
+    dest: '/tmp/'
+
+- name: Build hashcat
+  become: yes
+  become_user: root
+  become_method: sudo
+  shell: 'cd /tmp/hashcat;make clean;make;make install'
+
+- name: copy launch-worker file
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: launch-workers.j2
+    dest: /usr/local/bin/launch-workers
+    mode: 777
+
+- name: copy launch worker service
+  become: yes
+  become_user: root
+  become_method: sudo
+  template:
+    src: launch-workers.service.j2
+    dest: /etc/systemd/system/launch-workers.service
+
+- name: Start launch worker service
+  become: yes
+  become_user: root
+  become_method: sudo
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: launch-workers
+    enabled: yes
+
